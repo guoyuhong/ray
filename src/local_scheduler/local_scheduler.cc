@@ -533,8 +533,9 @@ void assign_task_to_worker(LocalSchedulerState *state,
                          fbb.CreateVector(worker->gpus_in_use));
   fbb.Finish(message);
 
-  if (write_message(worker->sock, MessageType_ExecuteTask, fbb.GetSize(),
-                    (uint8_t *) fbb.GetBufferPointer()) < 0) {
+  if (write_message(worker->sock,
+                    static_cast<int64_t>(MessageType::ExecuteTask),
+                    fbb.GetSize(), (uint8_t *) fbb.GetBufferPointer()) < 0) {
     if (errno == EPIPE || errno == EBADF) {
       /* Something went wrong, so kill the worker. */
       kill_worker(state, worker, false, false);
@@ -1034,7 +1035,8 @@ void handle_get_actor_frontier(LocalSchedulerState *state,
       fbb.CreateVector(task_counter_vector), to_flatbuf(fbb, frontier_vector));
   fbb.Finish(reply);
   /* Respond with the built ActorFrontier. */
-  if (write_message(worker->sock, MessageType_GetActorFrontierReply,
+  if (write_message(worker->sock,
+                    static_cast<int64_t>(MessageType::GetActorFrontierReply),
                     fbb.GetSize(), (uint8_t *) fbb.GetBufferPointer()) < 0) {
     if (errno == EPIPE || errno == EBADF) {
       /* Something went wrong, so kill the worker. */
@@ -1082,7 +1084,7 @@ void process_message(event_loop *loop,
   RAY_LOG(DEBUG) << "New event of type " << type;
 
   switch (type) {
-  case MessageType_SubmitTask: {
+  case static_cast<int64_t>(MessageType::SubmitTask): {
     auto message = flatbuffers::GetRoot<SubmitTaskRequest>(input);
     TaskExecutionSpec execution_spec =
         TaskExecutionSpec(from_flatbuf(*message->execution_dependencies()),
@@ -1110,9 +1112,9 @@ void process_message(event_loop *loop,
                                   execution_spec);
     }
   } break;
-  case MessageType_TaskDone: {
+  case static_cast<int64_t>(MessageType::TaskDone): {
   } break;
-  case MessageType_DisconnectClient: {
+  case static_cast<int64_t>(MessageType::DisconnectClient): {
     finish_task(state, worker);
     RAY_CHECK(!worker->disconnected);
     worker->disconnected = true;
@@ -1122,7 +1124,7 @@ void process_message(event_loop *loop,
       start_worker(state);
     }
   } break;
-  case MessageType_EventLogMessage: {
+  case static_cast<int64_t>(MessageType::EventLogMessage): {
     /* Parse the message. */
     auto message = flatbuffers::GetRoot<EventLogMessage>(input);
     if (state->db != NULL) {
@@ -1132,11 +1134,11 @@ void process_message(event_loop *loop,
                           message->value()->size(), message->timestamp());
     }
   } break;
-  case MessageType_RegisterClientRequest: {
+  case static_cast<int64_t>(MessageType::RegisterClientRequest): {
     auto message = flatbuffers::GetRoot<RegisterClientRequest>(input);
     handle_client_register(state, worker, message);
   } break;
-  case MessageType_GetTask: {
+  case static_cast<int64_t>(MessageType::GetTask): {
     /* If this worker reports a completed task, account for resources. */
     finish_task(state, worker);
     /* Let the scheduling algorithm process the fact that there is an available
@@ -1147,7 +1149,7 @@ void process_message(event_loop *loop,
       handle_actor_worker_available(state, state->algorithm_state, worker);
     }
   } break;
-  case MessageType_ReconstructObject: {
+  case static_cast<int64_t>(MessageType::ReconstructObject): {
     auto message = flatbuffers::GetRoot<ReconstructObject>(input);
     if (worker->task_in_progress != NULL && !worker->is_blocked) {
       /* If the worker was executing a task (i.e. non-driver) and it wasn't
@@ -1178,7 +1180,7 @@ void process_message(event_loop *loop,
     RAY_LOG(DEBUG) << "Disconnecting client on fd " << client_sock;
     handle_client_disconnect(state, worker);
   } break;
-  case MessageType_NotifyUnblocked: {
+  case static_cast<int64_t>(MessageType::NotifyUnblocked): {
     /* TODO(rkn): A driver may call this as well, right? */
     if (worker->task_in_progress != NULL) {
       /* If the worker was executing a task (i.e. non-driver), update its
@@ -1206,17 +1208,17 @@ void process_message(event_loop *loop,
     }
     print_worker_info("Worker unblocked", state->algorithm_state);
   } break;
-  case MessageType_PutObject: {
+  case static_cast<int64_t>(MessageType::PutObject): {
     auto message = flatbuffers::GetRoot<PutObject>(input);
     result_table_add(state->db, from_flatbuf(*message->object_id()),
                      from_flatbuf(*message->task_id()), true, NULL, NULL, NULL);
   } break;
-  case MessageType_GetActorFrontierRequest: {
+  case static_cast<int64_t>(MessageType::GetActorFrontierRequest): {
     auto message = flatbuffers::GetRoot<GetActorFrontierRequest>(input);
     ActorID actor_id = from_flatbuf(*message->actor_id());
     handle_get_actor_frontier(state, worker, actor_id);
   } break;
-  case MessageType_SetActorFrontier: {
+  case static_cast<int64_t>(MessageType::SetActorFrontier): {
     auto message = flatbuffers::GetRoot<ActorFrontier>(input);
     handle_set_actor_frontier(state, worker, *message);
   } break;
