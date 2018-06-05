@@ -133,15 +133,15 @@ void kill_worker(LocalSchedulerState *state,
     error_message << "The worker with ID " << worker->client_id << " died or "
                   << "was killed while executing the task with ID "
                   << TaskSpec_task_id(spec);
-    push_error(state->db, TaskSpec_driver_id(spec), WORKER_DIED_ERROR_INDEX,
-               error_message.str());
+    push_error(state->db, TaskSpec_driver_id(spec),
+               ErrorIndex::WORKER_DIED_ERROR_INDEX, error_message.str());
   }
 
   /* Clean up the task in progress. */
   if (worker->task_in_progress) {
     /* Update the task table to reflect that the task failed to complete. */
     if (state->db != NULL) {
-      Task_set_state(worker->task_in_progress, TASK_STATUS_LOST);
+      Task_set_state(worker->task_in_progress, TaskStatus::LOST);
 #if !RAY_USE_NEW_GCS
       task_table_update(state->db, worker->task_in_progress, NULL, NULL, NULL);
 #else
@@ -533,8 +533,9 @@ void assign_task_to_worker(LocalSchedulerState *state,
                          fbb.CreateVector(worker->gpus_in_use));
   fbb.Finish(message);
 
-  if (write_message(worker->sock, MessageType_ExecuteTask, fbb.GetSize(),
-                    (uint8_t *) fbb.GetBufferPointer()) < 0) {
+  if (write_message(worker->sock,
+                    static_cast<int64_t>(MessageType::ExecuteTask),
+                    fbb.GetSize(), (uint8_t *) fbb.GetBufferPointer()) < 0) {
     if (errno == EPIPE || errno == EBADF) {
       /* Something went wrong, so kill the worker. */
       kill_worker(state, worker, false, false);
@@ -546,7 +547,7 @@ void assign_task_to_worker(LocalSchedulerState *state,
   }
 
   Task *task =
-      Task_alloc(execution_spec, TASK_STATUS_RUNNING,
+      Task_alloc(execution_spec, TaskStatus::RUNNING,
                  state->db ? get_db_client_id(state->db) : DBClientID::nil());
   /* Record which task this worker is executing. This will be freed in
    * process_message when the worker sends a GetTask message to the local
@@ -624,7 +625,7 @@ void finish_task(LocalSchedulerState *state, LocalSchedulerClient *worker) {
     /* If we're connected to Redis, update tables. */
     if (state->db != NULL) {
       /* Update control state tables. */
-      int task_state = TASK_STATUS_DONE;
+      TaskStatus task_state = TaskStatus::DONE;
       Task_set_state(worker->task_in_progress, task_state);
 #if !RAY_USE_NEW_GCS
       auto retryInfo = RetryInfo{
@@ -691,7 +692,7 @@ void reconstruct_task_update_callback(Task *task,
 #if !RAY_USE_NEW_GCS
         task_table_test_and_update(state->db, Task_task_id(task),
                                    current_local_scheduler_id, Task_state(task),
-                                   TASK_STATUS_RECONSTRUCTING, NULL,
+                                   TaskStatus::RECONSTRUCTING, NULL,
                                    reconstruct_task_update_callback, state);
 #else
         RAY_CHECK_OK(gcs::TaskTableTestAndUpdate(
@@ -749,7 +750,7 @@ void reconstruct_put_task_update_callback(Task *task,
 #if !RAY_USE_NEW_GCS
         task_table_test_and_update(state->db, Task_task_id(task),
                                    current_local_scheduler_id, Task_state(task),
-                                   TASK_STATUS_RECONSTRUCTING, NULL,
+                                   TaskStatus::RECONSTRUCTING, NULL,
                                    reconstruct_put_task_update_callback, state);
 #else
         RAY_CHECK_OK(gcs::TaskTableTestAndUpdate(
@@ -761,7 +762,7 @@ void reconstruct_put_task_update_callback(Task *task,
             }));
         Task_free(task);
 #endif
-      } else if (Task_state(task) == TASK_STATUS_RUNNING) {
+      } else if (Task_state(task) == TaskStatus::RUNNING) {
         /* (1) The task is still executing on a live node. The object created
          * by `ray.put` was not able to be reconstructed, and the workload will
          * likely hang. Push an error to the appropriate driver. */
@@ -772,7 +773,8 @@ void reconstruct_put_task_update_callback(Task *task,
                       << " is still executing and so the object created by "
                       << "ray.put could not be reconstructed.";
         push_error(state->db, TaskSpec_driver_id(spec),
-                   PUT_RECONSTRUCTION_ERROR_INDEX, error_message.str());
+                   ErrorIndex::PUT_RECONSTRUCTION_ERROR_INDEX,
+                   error_message.str());
       }
     } else {
       /* (1) The task is still executing and it is the driver task. We cannot
@@ -785,10 +787,11 @@ void reconstruct_put_task_update_callback(Task *task,
                     << " is a driver task and so the object created by ray.put "
                     << "could not be reconstructed.";
       push_error(state->db, TaskSpec_driver_id(spec),
-                 PUT_RECONSTRUCTION_ERROR_INDEX, error_message.str());
+                 ErrorIndex::PUT_RECONSTRUCTION_ERROR_INDEX,
+                 error_message.str());
     }
   } else {
-    /* The update to TASK_STATUS_RECONSTRUCTING succeeded, so continue with
+    /* The update to TaskStatus::RECONSTRUCTING succeeded, so continue with
      * reconstruction as usual. */
     reconstruct_task_update_callback(task, user_context, updated);
   }
@@ -817,8 +820,8 @@ void reconstruct_evicted_result_lookup_callback(ObjectID reconstruct_object_id,
    * claim responsibility for reconstruction. */
 #if !RAY_USE_NEW_GCS
   task_table_test_and_update(state->db, task_id, DBClientID::nil(),
-                             (TASK_STATUS_DONE | TASK_STATUS_LOST),
-                             TASK_STATUS_RECONSTRUCTING, NULL, done_callback,
+                             (TaskStatus::DONE | TaskStatus::LOST),
+                             TaskStatus::RECONSTRUCTING, NULL, done_callback,
                              state);
 #else
   RAY_CHECK_OK(gcs::TaskTableTestAndUpdate(
@@ -854,7 +857,7 @@ void reconstruct_failed_result_lookup_callback(ObjectID reconstruct_object_id,
    * reconstruction. */
 #if !RAY_USE_NEW_GCS
   task_table_test_and_update(state->db, task_id, DBClientID::nil(),
-                             TASK_STATUS_LOST, TASK_STATUS_RECONSTRUCTING, NULL,
+                             TaskStatus::LOST, TaskStatus::RECONSTRUCTING, NULL,
                              reconstruct_task_update_callback, state);
 #else
   RAY_CHECK_OK(gcs::TaskTableTestAndUpdate(
@@ -1034,7 +1037,8 @@ void handle_get_actor_frontier(LocalSchedulerState *state,
       fbb.CreateVector(task_counter_vector), to_flatbuf(fbb, frontier_vector));
   fbb.Finish(reply);
   /* Respond with the built ActorFrontier. */
-  if (write_message(worker->sock, MessageType_GetActorFrontierReply,
+  if (write_message(worker->sock,
+                    static_cast<int64_t>(MessageType::GetActorFrontierReply),
                     fbb.GetSize(), (uint8_t *) fbb.GetBufferPointer()) < 0) {
     if (errno == EPIPE || errno == EBADF) {
       /* Something went wrong, so kill the worker. */
@@ -1082,7 +1086,7 @@ void process_message(event_loop *loop,
   RAY_LOG(DEBUG) << "New event of type " << type;
 
   switch (type) {
-  case MessageType_SubmitTask: {
+  case static_cast<int64_t>(MessageType::SubmitTask): {
     auto message = flatbuffers::GetRoot<SubmitTaskRequest>(input);
     TaskExecutionSpec execution_spec =
         TaskExecutionSpec(from_flatbuf(*message->execution_dependencies()),
@@ -1110,9 +1114,9 @@ void process_message(event_loop *loop,
                                   execution_spec);
     }
   } break;
-  case MessageType_TaskDone: {
+  case static_cast<int64_t>(MessageType::TaskDone): {
   } break;
-  case MessageType_DisconnectClient: {
+  case static_cast<int64_t>(MessageType::DisconnectClient): {
     finish_task(state, worker);
     RAY_CHECK(!worker->disconnected);
     worker->disconnected = true;
@@ -1122,7 +1126,7 @@ void process_message(event_loop *loop,
       start_worker(state);
     }
   } break;
-  case MessageType_EventLogMessage: {
+  case static_cast<int64_t>(MessageType::EventLogMessage): {
     /* Parse the message. */
     auto message = flatbuffers::GetRoot<EventLogMessage>(input);
     if (state->db != NULL) {
@@ -1132,11 +1136,11 @@ void process_message(event_loop *loop,
                           message->value()->size(), message->timestamp());
     }
   } break;
-  case MessageType_RegisterClientRequest: {
+  case static_cast<int64_t>(MessageType::RegisterClientRequest): {
     auto message = flatbuffers::GetRoot<RegisterClientRequest>(input);
     handle_client_register(state, worker, message);
   } break;
-  case MessageType_GetTask: {
+  case static_cast<int64_t>(MessageType::GetTask): {
     /* If this worker reports a completed task, account for resources. */
     finish_task(state, worker);
     /* Let the scheduling algorithm process the fact that there is an available
@@ -1147,7 +1151,7 @@ void process_message(event_loop *loop,
       handle_actor_worker_available(state, state->algorithm_state, worker);
     }
   } break;
-  case MessageType_ReconstructObject: {
+  case static_cast<int64_t>(MessageType::ReconstructObject): {
     auto message = flatbuffers::GetRoot<ReconstructObject>(input);
     if (worker->task_in_progress != NULL && !worker->is_blocked) {
       /* If the worker was executing a task (i.e. non-driver) and it wasn't
@@ -1174,11 +1178,11 @@ void process_message(event_loop *loop,
     }
     reconstruct_object(state, from_flatbuf(*message->object_id()));
   } break;
-  case DISCONNECT_CLIENT: {
+  case static_cast<int64_t>(CommonMessageType::DISCONNECT_CLIENT): {
     RAY_LOG(DEBUG) << "Disconnecting client on fd " << client_sock;
     handle_client_disconnect(state, worker);
   } break;
-  case MessageType_NotifyUnblocked: {
+  case static_cast<int64_t>(MessageType::NotifyUnblocked): {
     /* TODO(rkn): A driver may call this as well, right? */
     if (worker->task_in_progress != NULL) {
       /* If the worker was executing a task (i.e. non-driver), update its
@@ -1206,17 +1210,17 @@ void process_message(event_loop *loop,
     }
     print_worker_info("Worker unblocked", state->algorithm_state);
   } break;
-  case MessageType_PutObject: {
+  case static_cast<int64_t>(MessageType::PutObject): {
     auto message = flatbuffers::GetRoot<PutObject>(input);
     result_table_add(state->db, from_flatbuf(*message->object_id()),
                      from_flatbuf(*message->task_id()), true, NULL, NULL, NULL);
   } break;
-  case MessageType_GetActorFrontierRequest: {
+  case static_cast<int64_t>(MessageType::GetActorFrontierRequest): {
     auto message = flatbuffers::GetRoot<GetActorFrontierRequest>(input);
     ActorID actor_id = from_flatbuf(*message->actor_id());
     handle_get_actor_frontier(state, worker, actor_id);
   } break;
-  case MessageType_SetActorFrontier: {
+  case static_cast<int64_t>(MessageType::SetActorFrontier): {
     auto message = flatbuffers::GetRoot<ActorFrontier>(input);
     handle_set_actor_frontier(state, worker, *message);
   } break;
@@ -1423,7 +1427,7 @@ void start_server(
    * scheduler before the call to subscribe. */
   if (g_state->db != NULL) {
     task_table_subscribe(g_state->db, get_db_client_id(g_state->db),
-                         TASK_STATUS_SCHEDULED, handle_task_scheduled_callback,
+                         TaskStatus::SCHEDULED, handle_task_scheduled_callback,
                          g_state, NULL, NULL, NULL);
   }
   /* Subscribe to notifications about newly created actors. */
