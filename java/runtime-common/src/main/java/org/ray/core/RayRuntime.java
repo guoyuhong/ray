@@ -32,6 +32,10 @@ import org.ray.util.exception.TaskExecutionException;
 import org.ray.util.logger.DynamicLog;
 import org.ray.util.logger.DynamicLogManager;
 import org.ray.util.logger.RayLog;
+import org.ray.api.funcs.RayFunc_1_1;
+import org.ray.api.funcs.RayFunc_3_1;
+import org.ray.api.funcs.RayFunc_4_1;
+import org.ray.api.RayActor;
 
 /**
  * Core functionality to implement Ray APIs.
@@ -465,4 +469,108 @@ public abstract class RayRuntime implements RayApi {
   public RemoteFunctionManager getRemoteFunctionManager() {
     return remoteFunctionManager;
   }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <TContext, TResult> RayObject<Boolean> startBatch(
+      long batchId,
+      RayFunc_1_1<TContext, Boolean> starter,
+      RayFunc_3_1<Long, TContext, TResult, Boolean> completionHandler,
+      TContext context) {
+    UniqueID taskId = UniqueIdHelper.getBatchRootTaskId(batchId);
+    RayObject<Boolean> ret = null;
+    if (completionHandler != null) {
+      RayObject<TResult> result = UniqueIdHelper.BatchResultObject(batchId);
+      UniqueID endTaskId = UniqueIdHelper.getBatchEndTaskId(taskId, batchId);
+
+      //ret = Ray.call(completionHandler, Long.valueOf(batchId), context, result);
+
+      if (Ray.isRemoteLambda()) {
+        ret = this.worker.rpc(endTaskId, UniqueID.nil, RayFunc_3_1.class, completionHandler, 1,
+            new Object[]{batchId, context, result}).getObjs()[0];
+      } else {
+        ret = this.worker.rpc(endTaskId, () -> completionHandler.apply(null, null, null), 1,
+            new Object[]{batchId, context, result}).getObjs()[0];
+      }
+            
+            /*
+            RayFunc_4_1<Long, RayFunc_3_1<Long, TContext, TResult, Boolean>, TContext, TResult, Boolean> 
+                f = RayRuntime::onBatchCompleted;
+            ret = Ray.call(
+                    f,
+                    Long.valueOf(batchId),
+                    completionHandler,
+                    context,
+                    result
+                    );
+            */
+    }
+
+    if (Ray.isRemoteLambda()) {
+      this.call(taskId, RayFunc_1_1.class, starter, 1, context);
+    } else {
+      this.call(taskId, () -> starter.apply(null), 1, context);
+    }
+    return ret;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <TContext, TResult, TCompletionHost> RayObject<Boolean> startBatch(
+      long batchId,
+      RayFunc_1_1<TContext, Boolean> starter,
+      RayActor<TCompletionHost> completionHost,
+      RayFunc_4_1<TCompletionHost, Long, TContext, TResult, Boolean> completionHandler,
+      TContext context) {
+    UniqueID taskId = UniqueIdHelper.getBatchRootTaskId(batchId);
+    RayObject<Boolean> ret = null;
+    if (completionHandler != null) {
+      RayObject<TResult> result = UniqueIdHelper.BatchResultObject(batchId);
+      UniqueID endTaskId = UniqueIdHelper.getBatchEndTaskId(taskId, batchId);
+
+      //ret = Ray.call(completionHandler, completionHost, Long.valueOf(batchId), context, result);
+
+      if (Ray.isRemoteLambda()) {
+        ret = this.worker.rpc(endTaskId, UniqueID.nil, RayFunc_4_1.class, completionHandler, 1,
+            new Object[]{completionHost, batchId, context, result}).getObjs()[0];
+      } else {
+        ret = this.worker.rpc(endTaskId, () -> completionHandler.apply(null, null, null, null), 1,
+            new Object[]{completionHost, batchId, context, result}).getObjs()[0];
+      }
+            
+            /*
+            RayFunc_5_1<Long, RayActor<TCompletionHost>, RayFunc_4_1<TCompletionHost, Long, TContext, TResult, Boolean>, TContext, TResult, Boolean> 
+                f = RayRuntime::onBatchCompletedWithHost;
+            ret = Ray.call(
+                    f,
+                    Long.valueOf(batchId),
+                    completionHost,
+                    completionHandler,
+                    context,
+                    result
+                    );
+            */
+    }
+
+    if (Ray.isRemoteLambda()) {
+      this.call(taskId, RayFunc_1_1.class, starter, 1, context);
+    } else {
+      this.call(taskId, () -> starter.apply(null), 1, context);
+    }
+    return ret;
+  }
+
+  @Override
+  public <TResult> void endBatch(TResult r) {
+    long batchId = UniqueIdHelper.getBatchId(this.getCurrentTaskID());
+    Ray.getRappLogger().debug("end batch with id " + batchId);
+    this.putRaw(UniqueIdHelper.BatchResultObject(batchId).getId(), r);
+  }
+
+  protected Worker worker;
+  protected LocalSchedulerProxy localSchedulerProxy;
+  protected ObjectStoreProxy objectStoreProxy;
+  protected LocalFunctionManager functions;
+  protected RemoteFunctionManager remoteFunctionManager;
+  protected PathConfig pathConfig;
 }
