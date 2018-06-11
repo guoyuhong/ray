@@ -5,9 +5,11 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.Random;
 import org.apache.commons.lang3.BitField;
+import org.ray.api.RayObject;
 import org.ray.api.UniqueID;
 import org.ray.util.MD5Digestor;
 import org.ray.util.logger.RayLog;
+
 
 
 //
@@ -248,6 +250,47 @@ public class UniqueIdHelper {
     lbuffer.clear();
     return taskId;
   }
+
+  public static long getBatchId(UniqueID id) {
+    ByteBuffer rbb = ByteBuffer.wrap(id.getBytes());
+    rbb.order(ByteOrder.LITTLE_ENDIAN);
+    return getBatch(rbb);
+  }
+
+  public static UniqueID getBatchRootTaskId(long batchId) {
+    assert batchId != -1; // reserved for invalid batch Id
+    UniqueID rid = nextTaskId(batchId);
+
+    ByteBuffer bb = ByteBuffer.wrap(RayRuntime.getParams().driver_id.getBytes());
+    long uniqueId = bb.getLong();
+
+    ByteBuffer wbb = ByteBuffer.wrap(rid.getBytes());
+    wbb.order(ByteOrder.LITTLE_ENDIAN);
+    setUniqueness(wbb, uniqueId);
+    return rid;
+  }
+
+  public static UniqueID getBatchEndTaskId(UniqueID rootTaskId, long batchId) {
+    UniqueID endTaskId = rootTaskId.copy();
+    ByteBuffer wbb = ByteBuffer.wrap(endTaskId.getBytes());
+    wbb.order(ByteOrder.LITTLE_ENDIAN);
+    setUniqueness(wbb, batchId);
+    return endTaskId;
+  }
+
+  public static <ResultT> RayObject<ResultT> batchResultObject(Long batchId) {
+    UniqueID rid = nextTaskId(batchId);
+    ByteBuffer wbb = ByteBuffer.wrap(rid.getBytes());
+    wbb.order(ByteOrder.LITTLE_ENDIAN);
+    setType(wbb, Type.OBJECT);
+
+    ByteBuffer bb = ByteBuffer.wrap(RayRuntime.getParams().driver_id.getBytes());
+    long uniqueId = bb.getLong();
+
+    setUniqueness(wbb, uniqueId);
+    return new RayObject<>(rid);
+  }
+
 
   public static boolean isLambdaFunction(UniqueID functionId) {
     ByteBuffer wbb = ByteBuffer.wrap(functionId.getBytes());

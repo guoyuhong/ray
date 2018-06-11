@@ -1,6 +1,9 @@
 package org.ray.api;
 
 import java.util.List;
+import org.ray.api.funcs.RayFunc_1_1;
+import org.ray.api.funcs.RayFunc_3_1;
+import org.ray.api.funcs.RayFunc_4_1;
 import org.ray.api.internal.RayConnector;
 import org.ray.util.exception.TaskExecutionException;
 import org.ray.util.logger.DynamicLog;
@@ -115,5 +118,32 @@ public final class Ray extends Rpc {
    */
   public static DynamicLog getRappLogger() {
     return RayLog.rapp;
+  }
+
+  /**
+   * start a batch, see RayAPI.java for details.
+   */
+  public static <ContextT, ResultT> RayObject<Boolean> startBatch(
+      long batchId,
+      RayFunc_1_1<ContextT, Boolean> starter,
+      RayFunc_3_1<Long, ContextT, ResultT, Boolean> completionHandler,
+      ContextT context) {
+    return impl.startBatch(batchId, starter, completionHandler, context);
+  }
+
+  public static <ContextT, ResultT, CompletionHostT> RayObject<Boolean> startBatch(
+      long batchId,
+      RayFunc_1_1<ContextT, Boolean> starter,
+      RayActor<CompletionHostT> completionHost,
+      RayFunc_4_1<CompletionHostT, Long, ContextT, ResultT, Boolean> completionHandler,
+      ContextT context) {
+    return impl.startBatch(batchId, starter, completionHost, completionHandler, context);
+  }
+
+  /**
+   * end a batch, which tells core that it is safe to clear all its context.
+   */
+  public static <ResultT> void endBatch(ResultT r) {
+    impl.endBatch(r);
   }
 }

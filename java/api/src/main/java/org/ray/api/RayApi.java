@@ -3,6 +3,9 @@ package org.ray.api;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
+import org.ray.api.funcs.RayFunc_1_1;
+import org.ray.api.funcs.RayFunc_3_1;
+import org.ray.api.funcs.RayFunc_4_1;
 import org.ray.api.internal.Callable;
 import org.ray.util.exception.TaskExecutionException;
 
@@ -101,4 +104,33 @@ public interface RayApi {
                                        Integer returnCount, Object... args);
 
   boolean isRemoteLambda();
+
+  /**
+   * NOTE the following batch related functions are experimental.
+   *
+   * batch support, a batch is a segmentation of a job that are considered as a GC unit by the core
+   *
+   * @param batchId batch id
+   * @param starter batch starting routine
+   * @param completionHandler completion handler notified when the job fails or completed, returning
+   * true for GC
+   * @return the completion handler task handler
+   */
+  <ContextT, ResultT> RayObject<Boolean> startBatch(
+      long batchId,
+      RayFunc_1_1<ContextT, Boolean> starter,
+      RayFunc_3_1<Long, ContextT, ResultT, Boolean> completionHandler,
+      ContextT context);
+
+  <ContextT, ResultT, CompletionHostT> RayObject<Boolean> startBatch(
+      long batchId,
+      RayFunc_1_1<ContextT, Boolean> starter,
+      RayActor<CompletionHostT> completionHost,
+      RayFunc_4_1<CompletionHostT, Long, ContextT, ResultT, Boolean> completionHandler,
+      ContextT context);
+
+  /**
+   * end a batch, which tells engine that the batch is completed
+   */
+  <ResultT> void endBatch(ResultT r);
 }
