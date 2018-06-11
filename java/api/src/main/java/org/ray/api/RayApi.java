@@ -3,10 +3,10 @@ package org.ray.api;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
-import org.ray.api.internal.Callable;
 import org.ray.api.funcs.RayFunc_1_1;
 import org.ray.api.funcs.RayFunc_3_1;
 import org.ray.api.funcs.RayFunc_4_1;
+import org.ray.api.internal.Callable;
 import org.ray.util.exception.TaskExecutionException;
 
 /**
@@ -116,21 +116,21 @@ public interface RayApi {
    * true for GC
    * @return the completion handler task handler
    */
-  <TContext, TResult> RayObject<Boolean> startBatch(
+  <ContextT, ResultT> RayObject<Boolean> startBatch(
       long batchId,
-      RayFunc_1_1<TContext, Boolean> starter,
-      RayFunc_3_1<Long, TContext, TResult, Boolean> completionHandler,
-      TContext context);
+      RayFunc_1_1<ContextT, Boolean> starter,
+      RayFunc_3_1<Long, ContextT, ResultT, Boolean> completionHandler,
+      ContextT context);
 
-  <TContext, TResult, TCompletionHost> RayObject<Boolean> startBatch(
+  <ContextT, ResultT, CompletionHostT> RayObject<Boolean> startBatch(
       long batchId,
-      RayFunc_1_1<TContext, Boolean> starter,
-      RayActor<TCompletionHost> completionHost,
-      RayFunc_4_1<TCompletionHost, Long, TContext, TResult, Boolean> completionHandler,
-      TContext context);
+      RayFunc_1_1<ContextT, Boolean> starter,
+      RayActor<CompletionHostT> completionHost,
+      RayFunc_4_1<CompletionHostT, Long, ContextT, ResultT, Boolean> completionHandler,
+      ContextT context);
 
   /**
    * end a batch, which tells engine that the batch is completed
    */
-  <TResult> void endBatch(TResult r);
+  <ResultT> void endBatch(ResultT r);
 }

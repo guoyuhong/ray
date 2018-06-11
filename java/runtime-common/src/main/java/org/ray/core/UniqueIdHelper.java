@@ -5,10 +5,11 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.Random;
 import org.apache.commons.lang3.BitField;
+import org.ray.api.RayObject;
 import org.ray.api.UniqueID;
 import org.ray.util.MD5Digestor;
 import org.ray.util.logger.RayLog;
-import org.ray.api.RayObject;
+
 
 
 //
@@ -277,7 +278,7 @@ public class UniqueIdHelper {
     return endTaskId;
   }
 
-  public static <TResult> RayObject<TResult> BatchResultObject(Long batchId) {
+  public static <ResultT> RayObject<ResultT> batchResultObject(Long batchId) {
     UniqueID rid = nextTaskId(batchId);
     ByteBuffer wbb = ByteBuffer.wrap(rid.getBytes());
     wbb.order(ByteOrder.LITTLE_ENDIAN);

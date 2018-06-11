@@ -12,6 +12,7 @@ import java.util.Map;
 import org.apache.arrow.plasma.ObjectStoreLink;
 import org.apache.commons.lang3.tuple.Pair;
 import org.ray.api.Ray;
+import org.ray.api.RayActor;
 import org.ray.api.RayApi;
 import org.ray.api.RayList;
 import org.ray.api.RayMap;
@@ -19,6 +20,9 @@ import org.ray.api.RayObject;
 import org.ray.api.RayObjects;
 import org.ray.api.UniqueID;
 import org.ray.api.WaitResult;
+import org.ray.api.funcs.RayFunc_1_1;
+import org.ray.api.funcs.RayFunc_3_1;
+import org.ray.api.funcs.RayFunc_4_1;
 import org.ray.api.internal.Callable;
 import org.ray.core.model.RayParameters;
 import org.ray.spi.LocalSchedulerLink;
@@ -32,10 +36,6 @@ import org.ray.util.exception.TaskExecutionException;
 import org.ray.util.logger.DynamicLog;
 import org.ray.util.logger.DynamicLogManager;
 import org.ray.util.logger.RayLog;
-import org.ray.api.funcs.RayFunc_1_1;
-import org.ray.api.funcs.RayFunc_3_1;
-import org.ray.api.funcs.RayFunc_4_1;
-import org.ray.api.RayActor;
 
 /**
  * Core functionality to implement Ray APIs.
@@ -472,18 +472,16 @@ public abstract class RayRuntime implements RayApi {
 
   @SuppressWarnings("unchecked")
   @Override
-  public <TContext, TResult> RayObject<Boolean> startBatch(
+  public <ContextT, ResultT> RayObject<Boolean> startBatch(
       long batchId,
-      RayFunc_1_1<TContext, Boolean> starter,
-      RayFunc_3_1<Long, TContext, TResult, Boolean> completionHandler,
-      TContext context) {
+      RayFunc_1_1<ContextT, Boolean> starter,
+      RayFunc_3_1<Long, ContextT, ResultT, Boolean> completionHandler,
+      ContextT context) {
     UniqueID taskId = UniqueIdHelper.getBatchRootTaskId(batchId);
     RayObject<Boolean> ret = null;
     if (completionHandler != null) {
-      RayObject<TResult> result = UniqueIdHelper.BatchResultObject(batchId);
+      RayObject<ResultT> result = UniqueIdHelper.batchResultObject(batchId);
       UniqueID endTaskId = UniqueIdHelper.getBatchEndTaskId(taskId, batchId);
-
-      //ret = Ray.call(completionHandler, Long.valueOf(batchId), context, result);
 
       if (Ray.isRemoteLambda()) {
         ret = this.worker.rpc(endTaskId, UniqueID.nil, RayFunc_3_1.class, completionHandler, 1,
@@ -492,18 +490,6 @@ public abstract class RayRuntime implements RayApi {
         ret = this.worker.rpc(endTaskId, () -> completionHandler.apply(null, null, null), 1,
             new Object[]{batchId, context, result}).getObjs()[0];
       }
-            
-            /*
-            RayFunc_4_1<Long, RayFunc_3_1<Long, TContext, TResult, Boolean>, TContext, TResult, Boolean> 
-                f = RayRuntime::onBatchCompleted;
-            ret = Ray.call(
-                    f,
-                    Long.valueOf(batchId),
-                    completionHandler,
-                    context,
-                    result
-                    );
-            */
     }
 
     if (Ray.isRemoteLambda()) {
@@ -516,19 +502,17 @@ public abstract class RayRuntime implements RayApi {
 
   @SuppressWarnings("unchecked")
   @Override
-  public <TContext, TResult, TCompletionHost> RayObject<Boolean> startBatch(
+  public <ContextT, ResultT, CompletionHostT> RayObject<Boolean> startBatch(
       long batchId,
-      RayFunc_1_1<TContext, Boolean> starter,
-      RayActor<TCompletionHost> completionHost,
-      RayFunc_4_1<TCompletionHost, Long, TContext, TResult, Boolean> completionHandler,
-      TContext context) {
+      RayFunc_1_1<ContextT, Boolean> starter,
+      RayActor<CompletionHostT> completionHost,
+      RayFunc_4_1<CompletionHostT, Long, ContextT, ResultT, Boolean> completionHandler,
+      ContextT context) {
     UniqueID taskId = UniqueIdHelper.getBatchRootTaskId(batchId);
     RayObject<Boolean> ret = null;
     if (completionHandler != null) {
-      RayObject<TResult> result = UniqueIdHelper.BatchResultObject(batchId);
+      RayObject<ResultT> result = UniqueIdHelper.batchResultObject(batchId);
       UniqueID endTaskId = UniqueIdHelper.getBatchEndTaskId(taskId, batchId);
-
-      //ret = Ray.call(completionHandler, completionHost, Long.valueOf(batchId), context, result);
 
       if (Ray.isRemoteLambda()) {
         ret = this.worker.rpc(endTaskId, UniqueID.nil, RayFunc_4_1.class, completionHandler, 1,
@@ -537,19 +521,6 @@ public abstract class RayRuntime implements RayApi {
         ret = this.worker.rpc(endTaskId, () -> completionHandler.apply(null, null, null, null), 1,
             new Object[]{completionHost, batchId, context, result}).getObjs()[0];
       }
-            
-            /*
-            RayFunc_5_1<Long, RayActor<TCompletionHost>, RayFunc_4_1<TCompletionHost, Long, TContext, TResult, Boolean>, TContext, TResult, Boolean> 
-                f = RayRuntime::onBatchCompletedWithHost;
-            ret = Ray.call(
-                    f,
-                    Long.valueOf(batchId),
-                    completionHost,
-                    completionHandler,
-                    context,
-                    result
-                    );
-            */
     }
 
     if (Ray.isRemoteLambda()) {
@@ -562,15 +533,8 @@ public abstract class RayRuntime implements RayApi {
 
   @Override
   public <TResult> void endBatch(TResult r) {
-    long batchId = UniqueIdHelper.getBatchId(this.getCurrentTaskID());
+    long batchId = UniqueIdHelper.getBatchId(this.getCurrentTaskId());
     Ray.getRappLogger().debug("end batch with id " + batchId);
-    this.putRaw(UniqueIdHelper.BatchResultObject(batchId).getId(), r);
+    this.putRaw(UniqueIdHelper.batchResultObject(batchId).getId(), r);
   }
-
-  protected Worker worker;
-  protected LocalSchedulerProxy localSchedulerProxy;
-  protected ObjectStoreProxy objectStoreProxy;
-  protected LocalFunctionManager functions;
-  protected RemoteFunctionManager remoteFunctionManager;
-  protected PathConfig pathConfig;
 }
