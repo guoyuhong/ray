@@ -16,6 +16,8 @@ enum TablePrefix:int {
   HEARTBEAT,
   ERROR_INFO,
   PROFILE,
+  BATCH_INFO,
+  BATCH_OBJECTS,
 }
 
 // The channel that Add operations to the Table should be published on, if any.
@@ -28,6 +30,7 @@ enum TablePubsub:int {
   ACTOR,
   HEARTBEAT,
   ERROR_INFO,
+  BATCH,
 }
 
 table GcsTableEntry {
@@ -187,4 +190,20 @@ table HeartbeatTableData {
   // Total resource capacity configured for this node manager.
   resources_total_label: [string];
   resources_total_capacity: [double];
+}
+
+// One batch object which will be deleted when batch finishes.
+// This object will be added to a BATCH_OBJECT_TABLE.
+table BatchObjectData {
+  // The object prefix to mark the object type: object/function/task/actor.
+  prefix: TablePrefix;
+  // The correpending id.
+  object_id: string;
+}
+
+table BatchInfoData {
+  // The parent batch id of this batch. If no parent, this will be nilId.
+  parent_id: string;
+  // The list of child batch ids.
+  child_ids: [string];
 }

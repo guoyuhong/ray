@@ -337,6 +337,26 @@ class ActorTable : public Log<ActorID, ActorTableData> {
   }
 };
 
+class BatchObjectTable : public Log<BatchID, BatchObjectData> {
+ public:
+  BatchObjectTable(const std::shared_ptr<RedisContext> &context, AsyncGcsClient *client)
+      : Log(context, client) {
+    pubsub_channel_ = TablePubsub::NO_PUBLISH;
+    prefix_ = TablePrefix::BATCH_OBJECTS;
+  }
+
+  Status CleanBatchObjects(const BatchID &batch_id);
+};
+
+class BatchInfoTable : public Table<BatchID, BatchInfoData> {
+ public:
+  BatchInfoTable(const std::shared_ptr<RedisContext> &context, AsyncGcsClient *client)
+      : Table(context, client) {
+    pubsub_channel_ = TablePubsub::BATCH;
+    prefix_ = TablePrefix::BATCH_INFO;
+  }
+};
+
 class TaskReconstructionLog : public Log<TaskID, TaskReconstructionData> {
  public:
   TaskReconstructionLog(const std::shared_ptr<RedisContext> &context,

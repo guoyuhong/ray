@@ -18,6 +18,8 @@ AsyncGcsClient::AsyncGcsClient(const ClientID &client_id, CommandType command_ty
   heartbeat_table_.reset(new HeartbeatTable(context_, this));
   error_table_.reset(new ErrorTable(primary_context_, this));
   profile_table_.reset(new ProfileTable(context_, this));
+  batch_info_table_.reset(new BatchInfoTable(context_, this));
+  batch_object_table_.reset(new BatchObjectTable(context_, this));
   command_type_ = command_type;
 }
 
@@ -86,6 +88,10 @@ HeartbeatTable &AsyncGcsClient::heartbeat_table() { return *heartbeat_table_; }
 ErrorTable &AsyncGcsClient::error_table() { return *error_table_; }
 
 ProfileTable &AsyncGcsClient::profile_table() { return *profile_table_; }
+
+BatchInfoTable &AsyncGcsClient::batch_info_table() { return *batch_info_table_; }
+
+BatchObjectTable &AsyncGcsClient::batch_object_table() { return *batch_object_table_; }
 
 }  // namespace gcs
 

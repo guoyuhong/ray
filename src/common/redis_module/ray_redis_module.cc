@@ -963,6 +963,64 @@ bool is_nil(const std::string &data) {
   return true;
 }
 
+/// Clean all the objects/actors/tasks/fucntions under one batch.
+///
+/// This is called from a client with the command:
+//
+///    RAY.BATCH_CLEAN <table_prefix> <pubsub_channel> <batch_id>
+///
+/// \param table_prefix The prefix string for keys in batch table.
+/// \param pubsub_channel The pubsub channel name that notifications for
+///        this key should be published to.
+/// \param batch_id The ID of the batch to delete.
+/// \return OK.
+int BatchClean_RedisCommand(RedisModuleCtx *ctx,
+                            RedisModuleString **argv,
+                            int argc) {
+  RedisModule_AutoMemory(ctx);
+
+  if (argc < 4) {
+    return RedisModule_WrongArity(ctx);
+  }
+
+  RedisModuleString *prefix_str = argv[1];
+  RedisModuleString *batch_id = argv[3];
+
+  // Lookup the data at the key.
+  RedisModuleKey *table_key = OpenPrefixedKey(
+      ctx, prefix_str, batch_id, REDISMODULE_READ | REDISMODULE_WRITE);
+  auto key_type = RedisModule_KeyType(table_key);
+  char buffer[64] = {0};
+  if (key_type == REDISMODULE_KEYTYPE_ZSET) {
+    RAY_CHECK(RedisModule_ZsetFirstInScoreRange(
+                  table_key, REDISMODULE_NEGATIVE_INFINITE,
+                  REDISMODULE_POSITIVE_INFINITE, 1, 1) == REDISMODULE_OK);
+    for (; !RedisModule_ZsetRangeEndReached(table_key);
+         RedisModule_ZsetRangeNext(table_key)) {
+      RedisModuleString *redis_string =
+          RedisModule_ZsetRangeCurrentElement(table_key, NULL);
+      const char *buf = RedisModule_StringPtrLen(redis_string, nullptr);
+      auto data = flatbuffers::GetRoot<BatchObjectData>(buf);
+      TablePrefix prefix_enum = data->prefix();
+      // Delete the corresponding table.
+      sprintf(buffer, "%d", static_cast<int>(prefix_enum));
+      RedisModuleString *prefixed_name = RedisString_Format(ctx, "%s", buffer);
+      RedisModuleString *id_keyname =
+          RedisModule_CreateString(ctx, data->object_id()->str().c_str(),
+                                   data->object_id()->str().length());
+      RedisModuleKey *delete_key =
+          OpenPrefixedKey(ctx, prefixed_name, id_keyname, REDISMODULE_WRITE);
+      if (RedisModule_DeleteKey(delete_key) != REDISMODULE_OK) {
+        continue;
+      }
+    }
+    // Delete the batch object table itself.
+    RedisModule_DeleteKey(table_key);
+  }
+  RedisModule_ReplyWithSimpleString(ctx, "OK");
+  return REDISMODULE_OK;
+}
+
 // This is a temporary redis command that will be removed once
 // the GCS uses https://github.com/pcmoritz/credis.
 // Be careful, this only supports Task Table payloads.
@@ -1797,6 +1855,11 @@ int RedisModule_OnLoad(RedisModuleCtx *ctx,
   if (RedisModule_CreateCommand(ctx, "ray.table_test_and_update",
                                 TableTestAndUpdate_RedisCommand, "write", 0, 0,
                                 0) == REDISMODULE_ERR) {
+    return REDISMODULE_ERR;
+  }
+
+  if (RedisModule_CreateCommand(ctx, "ray.batch_clean", BatchClean_RedisCommand,
+                                "write", 0, 0, 0) == REDISMODULE_ERR) {
     return REDISMODULE_ERR;
   }
 
