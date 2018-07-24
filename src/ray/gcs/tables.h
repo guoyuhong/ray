@@ -195,6 +195,8 @@ class Log : virtual public PubsubInterface<ID> {
 
   /// Commands to a GCS table can either be regular (default) or chain-replicated.
   CommandType command_type_ = CommandType::kRegular;
+
+  void GetVecFromGcsTableEntry(std::vector<DataT> *out_vec, const GcsTableEntry &root);
 };
 
 template <typename ID, typename Data>
@@ -337,23 +339,41 @@ class ActorTable : public Log<ActorID, ActorTableData> {
   }
 };
 
-class BatchObjectTable : public Log<BatchID, BatchObjectData> {
+class BatchResourceTable : public Log<BatchID, BatchResourceData> {
  public:
-  BatchObjectTable(const std::shared_ptr<RedisContext> &context, AsyncGcsClient *client)
-      : Log(context, client) {
+  BatchResourceTable(const std::shared_ptr<RedisContext> &context, AsyncGcsClient *client)
+      : Log(context, client), batch_clean_subscribe_callback_index_(-1) {
     pubsub_channel_ = TablePubsub::NO_PUBLISH;
-    prefix_ = TablePrefix::BATCH_OBJECTS;
+    deletion_pubsub_channel_ = TablePubsub::BATCH_CLEAN;
+    prefix_ = TablePrefix::BATCH_RESOURCE;
   }
 
-  Status CleanBatchObjects(const BatchID &batch_id);
+  Status CleanBatchResources(const BatchID &batch_id);
+
+  Status SubscribeBatchClean(const JobID &job_id, const Callback &subscribe,
+                             const SubscriptionCallback &done);
+
+ private:
+  TablePubsub deletion_pubsub_channel_;
+
+  int64_t batch_clean_subscribe_callback_index_;
 };
 
-class BatchInfoTable : public Table<BatchID, BatchInfoData> {
+class BatchParentTable : public Log<BatchID, BatchIdData> {
  public:
-  BatchInfoTable(const std::shared_ptr<RedisContext> &context, AsyncGcsClient *client)
+  BatchParentTable(const std::shared_ptr<RedisContext> &context, AsyncGcsClient *client)
+      : Log(context, client) {
+    pubsub_channel_ = TablePubsub::NO_PUBLISH;
+    prefix_ = TablePrefix::BATCH_PARENT;
+  }
+};
+
+class BatchChildTable : public Table<BatchID, BatchIdData> {
+ public:
+  BatchChildTable(const std::shared_ptr<RedisContext> &context, AsyncGcsClient *client)
       : Table(context, client) {
-    pubsub_channel_ = TablePubsub::BATCH;
-    prefix_ = TablePrefix::BATCH_INFO;
+    pubsub_channel_ = TablePubsub::NO_PUBLISH;
+    prefix_ = TablePrefix::BATCH_CHILD;
   }
 };
 

@@ -77,6 +77,19 @@ Status Log<ID, Data>::AppendAt(const JobID &job_id, const ID &id,
 }
 
 template <typename ID, typename Data>
+void Log<ID, Data>::GetVecFromGcsTableEntry(std::vector<DataT> *out_vec,
+                                            const GcsTableEntry &root) {
+  if (out_vec != nullptr) {
+    for (size_t i = 0; i < root.entries()->size(); i++) {
+      DataT result;
+      auto data_root = flatbuffers::GetRoot<Data>(root.entries()->Get(i)->data());
+      data_root->UnPackTo(&result);
+      out_vec->emplace_back(std::move(result));
+    }
+  }
+}
+
+template <typename ID, typename Data>
 Status Log<ID, Data>::Lookup(const JobID &job_id, const ID &id, const Callback &lookup) {
   auto callback = [this, id, lookup](const std::string &data) {
     if (lookup != nullptr) {
@@ -84,12 +97,7 @@ Status Log<ID, Data>::Lookup(const JobID &job_id, const ID &id, const Callback &
       if (!data.empty()) {
         auto root = flatbuffers::GetRoot<GcsTableEntry>(data.data());
         RAY_CHECK(from_flatbuf(*root->id()) == id);
-        for (size_t i = 0; i < root->entries()->size(); i++) {
-          DataT result;
-          auto data_root = flatbuffers::GetRoot<Data>(root->entries()->Get(i)->data());
-          data_root->UnPackTo(&result);
-          results.emplace_back(std::move(result));
-        }
+        GetVecFromGcsTableEntry(&results, *root);
       }
       lookup(client_, id, results);
     }
@@ -123,12 +131,7 @@ Status Log<ID, Data>::Subscribe(const JobID &job_id, const ClientID &client_id,
           id = from_flatbuf(*root->id());
         }
         std::vector<DataT> results;
-        for (size_t i = 0; i < root->entries()->size(); i++) {
-          DataT result;
-          auto data_root = flatbuffers::GetRoot<Data>(root->entries()->Get(i)->data());
-          data_root->UnPackTo(&result);
-          results.emplace_back(std::move(result));
-        }
+        GetVecFromGcsTableEntry(&results, *root);
         subscribe(client_, id, results);
       }
     }
@@ -409,10 +412,44 @@ const ClientTableDataT &ClientTable::GetClient(const ClientID &client_id) {
   }
 }
 
-Status BatchObjectTable::CleanBatchObjects(const BatchID &batch_id) {
+Status BatchResourceTable::CleanBatchResources(const BatchID &batch_id) {
   std::vector<uint8_t> nil;
   return context_->RunAsync("RAY.BATCH_CLEAN", batch_id, nil.data(), nil.size(), prefix_,
-                            pubsub_channel_, nullptr);
+                            deletion_pubsub_channel_, nullptr);
+}
+
+Status BatchResourceTable::SubscribeBatchClean(const JobID &job_id,
+                                               const Callback &subscribe,
+                                               const SubscriptionCallback &done) {
+  RAY_CHECK(batch_clean_subscribe_callback_index_ == -1)
+      << "Client called SubscribeBatchClean twice on the same table";
+  auto callback = [this, subscribe, done](const std::string &data) {
+    if (data.empty()) {
+      // No notification data is provided. This is the callback for the
+      // initial subscription request.
+      if (done != nullptr) {
+        done(client_);
+      }
+    } else {
+      // Data is provided. This is the callback for a message.
+      if (subscribe != nullptr) {
+        std::vector<DataT> results;
+        BatchID id = BatchID::nil();
+        if (!data.empty()) {
+          auto root = flatbuffers::GetRoot<GcsTableEntry>(data.data());
+          id = from_flatbuf(*root->id());
+          GetVecFromGcsTableEntry(&results, *root);
+        }
+        subscribe(client_, id, results);
+      }
+    }
+    // We do not delete the callback after calling it since there may be
+    // more subscription messages.
+    return false;
+  };
+  batch_clean_subscribe_callback_index_ = 1;
+  return context_->SubscribeAsync(ClientID::nil(), deletion_pubsub_channel_,
+                                  std::move(callback));
 }
 
 template class Log<ObjectID, ObjectTableData>;
@@ -425,8 +462,9 @@ template class Table<ClientID, HeartbeatTableData>;
 template class Log<JobID, ErrorTableData>;
 template class Log<UniqueID, ClientTableData>;
 template class Log<UniqueID, ProfileTableData>;
-template class Log<BatchID, BatchObjectData>;
-template class Table<BatchID, BatchInfoData>;
+template class Log<BatchID, BatchResourceData>;
+template class Log<BatchID, BatchIdData>;
+template class Table<BatchID, BatchIdData>;
 
 }  // namespace gcs
 

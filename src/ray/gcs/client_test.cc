@@ -914,13 +914,11 @@ TEST_F(TestGcsWithAsio, TestClientTableMarkDisconnected) {
   TestClientTableMarkDisconnected(job_id_, client_);
 }
 
-void TestBatchObjectTableClean(const JobID &job_id,
-                               std::shared_ptr<gcs::AsyncGcsClient> client) {
+void TestBatchResourceTableClean(const JobID &job_id,
+                                 std::shared_ptr<gcs::AsyncGcsClient> client) {
+  // The resource Ids.
   BatchID batch_id = BatchID::from_random();
-  // It is fine to clean a batch_id that does not exist.
-  RAY_CHECK_OK(client->batch_object_table().CleanBatchObjects(batch_id));
   auto client_id = client->client_table().GetLocalClientId();
-  // Add everything to BatchObjectTable.
   std::unordered_map<UniqueID, TablePrefix> resultMap;
   ActorID actor_id = ActorID::from_random();
   resultMap.emplace(actor_id, TablePrefix::ACTOR);
@@ -930,11 +928,31 @@ void TestBatchObjectTableClean(const JobID &job_id,
   resultMap[task_id] = TablePrefix::TASK;
   TaskID raylet_task_id = TaskID::from_random();
   resultMap[raylet_task_id] = TablePrefix::RAYLET_TASK;
+  auto batchCleanCallback = [&resultMap](AsyncGcsClient *client, const BatchID &id,
+                                         const std::vector<BatchResourceDataT> &data) {
+    // This is the clean processing function. Here we just verify the information.
+    ASSERT_EQ(data.size(), resultMap.size());
+    for (const auto &resource : data) {
+      auto id = UniqueID::from_binary(resource.object_id);
+      auto iter = resultMap.find(id);
+      ASSERT_TRUE(iter != resultMap.end());
+      ASSERT_TRUE(iter->second == resource.prefix);
+    }
+  };
+  auto onSubSuccessCallback = [](AsyncGcsClient *client) { ASSERT_TRUE(true); };
+  // Subscribe the BatchClean message.
+  RAY_CHECK_OK(client->batch_resource_table().SubscribeBatchClean(
+      job_id, batchCleanCallback, onSubSuccessCallback));
 
+  // It is fine to clean a batch_id that does not exist.
+  // Redis server will found this is empty and it will do nothing.
+  RAY_CHECK_OK(client->batch_resource_table().CleanBatchResources(batch_id));
+
+  // Add everything to BatchResourceTable.
   // Check that we added the correct batch_object.
   auto add_callback = [batch_id, resultMap](gcs::AsyncGcsClient *client,
                                             const UniqueID &id,
-                                            const BatchObjectDataT &d) {
+                                            const BatchResourceDataT &d) {
     ASSERT_EQ(batch_id, id);
     auto iter = resultMap.find(UniqueID::from_binary(d.object_id));
     ASSERT_TRUE(iter != resultMap.end());
@@ -942,11 +960,11 @@ void TestBatchObjectTableClean(const JobID &job_id,
   };
 
   for (auto &pair : resultMap) {
-    auto data = std::make_shared<BatchObjectDataT>();
+    auto data = std::make_shared<BatchResourceDataT>();
     data->prefix = pair.second;
     data->object_id = pair.first.binary();
     RAY_CHECK_OK(
-        client->batch_object_table().Append(job_id, batch_id, data, add_callback));
+        client->batch_resource_table().Append(job_id, batch_id, data, add_callback));
   }
 
   // Add the fake actors info to GCS. One will be deleted and one will not.
@@ -991,7 +1009,7 @@ void TestBatchObjectTableClean(const JobID &job_id,
                                                nullptr));
 
   // Do the batch clean.
-  RAY_CHECK_OK(client->batch_object_table().CleanBatchObjects(batch_id));
+  RAY_CHECK_OK(client->batch_resource_table().CleanBatchResources(batch_id));
 
   // Check.
   // The callbacks to check that one object is deleted and one object remains.
@@ -1049,7 +1067,7 @@ void TestBatchObjectTableClean(const JobID &job_id,
     test->Stop();
   };
 
-  // Lookup test for the existing and deleted batch objects.
+  // Lookup test for the existing and deleted batch resources.
   RAY_CHECK_OK(client->actor_table().Lookup(job_id, actor_id, actor_callback));
   RAY_CHECK_OK(client->actor_table().Lookup(job_id, actor_id2, actor_callback));
   RAY_CHECK_OK(client->object_table().Lookup(job_id, object_id, object_callback));
@@ -1066,8 +1084,8 @@ void TestBatchObjectTableClean(const JobID &job_id,
   test->Start();
 }
 
-TEST_MACRO(TestGcsWithAe, TestBatchObjectTableClean);
-TEST_MACRO(TestGcsWithAsio, TestBatchObjectTableClean);
+TEST_MACRO(TestGcsWithAe, TestBatchResourceTableClean);
+TEST_MACRO(TestGcsWithAsio, TestBatchResourceTableClean);
 
 #undef TEST_MACRO
 

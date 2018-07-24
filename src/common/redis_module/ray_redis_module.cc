@@ -984,9 +984,33 @@ int BatchClean_RedisCommand(RedisModuleCtx *ctx,
   }
 
   RedisModuleString *prefix_str = argv[1];
+  RedisModuleString *pubsub_channel_str = argv[2];
   RedisModuleString *batch_id = argv[3];
 
-  // Lookup the data at the key.
+  // Publish this batch clean message before cleaning this table.
+  // Read the table content to form the publish message.
+  flatbuffers::FlatBufferBuilder fbb;
+  RedisModuleKey *table_key_read =
+      OpenPrefixedKey(ctx, prefix_str, batch_id, REDISMODULE_READ);
+  if (table_key_read == nullptr) {
+    // This is an empty key, no need to process.
+    RedisModule_ReplyWithNull(ctx);
+    return REDISMODULE_OK;
+  } else {
+    TableEntryToFlatbuf(table_key_read, batch_id, fbb);
+  }
+
+  TablePubsub pubsub_channel = ParseTablePubsub(pubsub_channel_str);
+  if (pubsub_channel != TablePubsub::NO_PUBLISH) {
+    RedisModuleCallReply *reply =
+        RedisModule_Call(ctx, "PUBLISH", "sb", pubsub_channel_str,
+                         fbb.GetBufferPointer(), fbb.GetSize());
+    if (reply == nullptr) {
+      return RedisModule_ReplyWithError(ctx, "error during PUBLISH");
+    }
+  }
+  RedisModule_CloseKey(table_key_read);
+
   RedisModuleKey *table_key = OpenPrefixedKey(
       ctx, prefix_str, batch_id, REDISMODULE_READ | REDISMODULE_WRITE);
   auto key_type = RedisModule_KeyType(table_key);
@@ -998,9 +1022,9 @@ int BatchClean_RedisCommand(RedisModuleCtx *ctx,
     for (; !RedisModule_ZsetRangeEndReached(table_key);
          RedisModule_ZsetRangeNext(table_key)) {
       RedisModuleString *redis_string =
-          RedisModule_ZsetRangeCurrentElement(table_key, NULL);
+          RedisModule_ZsetRangeCurrentElement(table_key, nullptr);
       const char *buf = RedisModule_StringPtrLen(redis_string, nullptr);
-      auto data = flatbuffers::GetRoot<BatchObjectData>(buf);
+      auto data = flatbuffers::GetRoot<BatchResourceData>(buf);
       TablePrefix prefix_enum = data->prefix();
       // Delete the corresponding table.
       sprintf(buffer, "%d", static_cast<int>(prefix_enum));
@@ -1014,7 +1038,7 @@ int BatchClean_RedisCommand(RedisModuleCtx *ctx,
         continue;
       }
     }
-    // Delete the batch object table itself.
+    // Delete the batch resource table itself.
     RedisModule_DeleteKey(table_key);
   }
   RedisModule_ReplyWithSimpleString(ctx, "OK");

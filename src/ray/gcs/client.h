@@ -60,8 +60,9 @@ class RAY_EXPORT AsyncGcsClient {
   HeartbeatTable &heartbeat_table();
   ErrorTable &error_table();
   ProfileTable &profile_table();
-  BatchInfoTable &batch_info_table();
-  BatchObjectTable &batch_object_table();
+  BatchParentTable &batch_parent_table();
+  BatchChildTable &batch_child_table();
+  BatchResourceTable &batch_resource_table();
 
   // We also need something to export generic code to run on workers from the
   // driver (to set the PYTHONPATH)
@@ -86,8 +87,9 @@ class RAY_EXPORT AsyncGcsClient {
   std::unique_ptr<ErrorTable> error_table_;
   std::unique_ptr<ProfileTable> profile_table_;
   std::unique_ptr<ClientTable> client_table_;
-  std::unique_ptr<BatchInfoTable> batch_info_table_;
-  std::unique_ptr<BatchObjectTable> batch_object_table_;
+  std::unique_ptr<BatchChildTable> batch_child_table_;
+  std::unique_ptr<BatchParentTable> batch_parent_table_;
+  std::unique_ptr<BatchResourceTable> batch_resource_table_;
   // The following contexts write to the data shard
   std::shared_ptr<RedisContext> context_;
   std::unique_ptr<RedisAsioClient> asio_async_client_;
