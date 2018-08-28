@@ -14,7 +14,6 @@ except ImportError:
     pass  # soft dep
 
 
-
 class TorchPolicyGraph(PolicyGraph):
     """Template for a PyTorch policy and loss to use with RLlib.
 

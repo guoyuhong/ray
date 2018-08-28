@@ -7,13 +7,9 @@ import numpy as np
 
 import ray
 from ray.rllib import _register_all
-from ray.tune.schedulers import (
-    AsyncHyperBandScheduler,
-    HyperBandScheduler,
-    MedianStoppingRule,
-    PopulationBasedTraining,
-    TrialScheduler,
-)
+from ray.tune.schedulers import (AsyncHyperBandScheduler,
+                                 HyperBandScheduler, MedianStoppingRule,
+                                 PopulationBasedTraining, TrialScheduler)
 from ray.tune.schedulers.pbt import explore
 from ray.tune.trial import Checkpoint, Resources, Trial
 from ray.tune.trial_executor import TrialExecutor

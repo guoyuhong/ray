@@ -9,10 +9,8 @@ import tensorflow as tf
 
 import ray
 from ray.rllib.agents.impala import vtrace
-from ray.rllib.evaluation.tf_policy_graph import (
-    LearningRateSchedule,
-    TFPolicyGraph,
-)
+from ray.rllib.evaluation.tf_policy_graph import (LearningRateSchedule,
+                                                  TFPolicyGraph)
 from ray.rllib.models.catalog import ModelCatalog
 from ray.rllib.models.misc import linear, normc_initializer
 from ray.rllib.utils.error import UnsupportedSpaceException

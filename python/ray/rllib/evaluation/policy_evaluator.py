@@ -14,7 +14,8 @@ from ray.rllib.env.serving_env import ServingEnv
 from ray.rllib.env.vector_env import VectorEnv
 from ray.rllib.evaluation.interface import EvaluatorInterface
 from ray.rllib.evaluation.policy_graph import PolicyGraph
-from ray.rllib.evaluation.sample_batch import DEFAULT_POLICY_ID, MultiAgentBatch
+from ray.rllib.evaluation.sample_batch import (DEFAULT_POLICY_ID,
+                                               MultiAgentBatch)
 from ray.rllib.evaluation.sampler import AsyncSampler, SyncSampler
 from ray.rllib.evaluation.tf_policy_graph import TFPolicyGraph
 from ray.rllib.models import ModelCatalog

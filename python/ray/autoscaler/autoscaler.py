@@ -20,21 +20,15 @@ from six.moves import queue
 import ray.services as services
 from ray.autoscaler.docker import dockerize_if_needed
 from ray.autoscaler.node_provider import get_default_config, get_node_provider
-from ray.autoscaler.tags import (
-    TAG_RAY_LAUNCH_CONFIG,
-    TAG_RAY_NODE_NAME,
-    TAG_RAY_NODE_STATUS,
-    TAG_RAY_NODE_TYPE,
-    TAG_RAY_RUNTIME_CONFIG,
-)
+from ray.autoscaler.tags import (TAG_RAY_LAUNCH_CONFIG, TAG_RAY_NODE_NAME,
+                                 TAG_RAY_NODE_STATUS, TAG_RAY_NODE_TYPE,
+                                 TAG_RAY_RUNTIME_CONFIG)
 from ray.autoscaler.updater import NodeUpdaterProcess
-from ray.ray_constants import (
-    AUTOSCALER_HEARTBEAT_TIMEOUT_S,
-    AUTOSCALER_MAX_CONCURRENT_LAUNCHES,
-    AUTOSCALER_MAX_LAUNCH_BATCH,
-    AUTOSCALER_MAX_NUM_FAILURES,
-    AUTOSCALER_UPDATE_INTERVAL_S,
-)
+from ray.ray_constants import (AUTOSCALER_HEARTBEAT_TIMEOUT_S,
+                               AUTOSCALER_MAX_CONCURRENT_LAUNCHES,
+                               AUTOSCALER_MAX_LAUNCH_BATCH,
+                               AUTOSCALER_MAX_NUM_FAILURES,
+                               AUTOSCALER_UPDATE_INTERVAL_S)
 
 logger = logging.getLogger(__name__)
 

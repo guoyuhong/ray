@@ -11,8 +11,8 @@ from ray.rllib.agents.ppo.ppo import PPOAgent
 from ray.rllib.agents.ppo.ppo_policy_graph import PPOPolicyGraph
 from ray.rllib.test.test_multi_agent_env import MultiCartpole
 from ray.tune.logger import pretty_print
-from ray.tune.registry import register_env
 
+from ray.tune.registry import register_env # isort:skip
 """Example of using two different training methods at once in multi-agent.
 
 Here we create a number of CartPole agents, some of which are trained with
@@ -22,8 +22,6 @@ a single training method).
 
 For a simpler example, see also: multiagent_cartpole.py
 """
-
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--num-iters", type=int, default=20)

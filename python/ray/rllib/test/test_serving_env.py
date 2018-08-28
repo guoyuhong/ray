@@ -12,11 +12,8 @@ from ray.rllib.agents.dqn import DQNAgent
 from ray.rllib.agents.pg import PGAgent
 from ray.rllib.env.serving_env import ServingEnv
 from ray.rllib.evaluation.policy_evaluator import PolicyEvaluator
-from ray.rllib.test.test_policy_evaluator import (
-    BadPolicyGraph,
-    MockEnv,
-    MockPolicyGraph,
-)
+from ray.rllib.test.test_policy_evaluator import (BadPolicyGraph, MockEnv,
+                                                  MockPolicyGraph)
 from ray.tune.registry import register_env
 
 

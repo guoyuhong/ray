@@ -10,14 +10,9 @@ import click
 import ray.ray_constants as ray_constants
 import ray.services as services
 import ray.utils
-from ray.autoscaler.commands import (
-    attach_cluster,
-    create_or_update_cluster,
-    exec_cluster,
-    get_head_node_ip,
-    rsync,
-    teardown_cluster,
-)
+from ray.autoscaler.commands import (attach_cluster, create_or_update_cluster,
+                                     exec_cluster, get_head_node_ip, rsync,
+                                     teardown_cluster)
 
 
 def check_no_existing_redis_clients(node_ip_address, redis_client):

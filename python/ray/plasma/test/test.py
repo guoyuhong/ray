@@ -19,11 +19,8 @@ from numpy.testing import assert_equal
 import ray
 import ray.ray_constants as ray_constants
 from ray import services
-from ray.plasma.utils import (
-    create_object,
-    create_object_with_id,
-    random_object_id,
-)
+from ray.plasma.utils import (create_object, create_object_with_id,
+                              random_object_id)
 
 USE_VALGRIND = False
 PLASMA_STORE_MEMORY = 1000000000

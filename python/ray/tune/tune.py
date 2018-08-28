@@ -4,12 +4,8 @@ import time
 
 from ray.tune.error import TuneError
 from ray.tune.log_sync import wait_for_log_sync
-from ray.tune.schedulers import (
-    AsyncHyperBandScheduler,
-    FIFOScheduler,
-    HyperBandScheduler,
-    MedianStoppingRule,
-)
+from ray.tune.schedulers import (AsyncHyperBandScheduler, FIFOScheduler,
+                                 HyperBandScheduler, MedianStoppingRule)
 from ray.tune.suggest import BasicVariantGenerator
 from ray.tune.trial import DEBUG_PRINT_INTERVAL, Trial
 from ray.tune.trial_runner import TrialRunner

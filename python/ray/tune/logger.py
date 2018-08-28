@@ -8,12 +8,8 @@ import numpy as np
 import yaml
 
 from ray.tune.log_sync import get_syncer
-from ray.tune.result import (
-    NODE_IP,
-    TIME_TOTAL_S,
-    TIMESTEPS_TOTAL,
-    TRAINING_ITERATION,
-)
+from ray.tune.result import (NODE_IP, TIME_TOTAL_S,
+                             TIMESTEPS_TOTAL, TRAINING_ITERATION)
 
 try:
     import tensorflow as tf

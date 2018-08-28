@@ -11,13 +11,8 @@ import ray.local_scheduler
 import ray.ray_constants as ray_constants
 import ray.signature as signature
 import ray.worker
-from ray.utils import (
-    _random_string,
-    check_oversized_pickle,
-    decode,
-    is_cython,
-    push_error_to_driver,
-)
+from ray.utils import (_random_string, check_oversized_pickle,
+                       decode, is_cython, push_error_to_driver)
 
 DEFAULT_ACTOR_METHOD_NUM_RETURN_VALS = 1
 

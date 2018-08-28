@@ -12,13 +12,8 @@ from datetime import datetime
 
 import ray
 from ray.tune.logger import UnifiedLogger
-from ray.tune.result import (
-    DEFAULT_RESULTS_DIR,
-    DONE,
-    TIME_THIS_ITER_S,
-    TIMESTEPS_THIS_ITER,
-    TIMESTEPS_TOTAL,
-)
+from ray.tune.result import (DEFAULT_RESULTS_DIR, DONE, TIME_THIS_ITER_S,
+                             TIMESTEPS_THIS_ITER, TIMESTEPS_TOTAL)
 from ray.tune.trial import Resources
 
 

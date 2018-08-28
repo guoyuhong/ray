@@ -12,12 +12,8 @@ import numpy as np
 
 import ray
 from ray.rllib.agents import Agent
-from ray.rllib.agents.es import (
-    optimizers,
-    policies,
-    tabular_logger as tlogger,
-    utils,
-)
+from ray.rllib.agents.es import (optimizers, policies,
+                                 tabular_logger as tlogger, utils)
 from ray.rllib.utils import merge_dicts
 from ray.tune.trial import Resources
 

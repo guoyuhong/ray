@@ -13,16 +13,10 @@ from ray.rllib.env.async_vector_env import _MultiAgentEnvToAsync
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
 from ray.rllib.evaluation.metrics import collect_metrics
 from ray.rllib.evaluation.policy_evaluator import PolicyEvaluator
-from ray.rllib.optimizers import (
-    AsyncGradientsOptimizer,
-    SyncReplayOptimizer,
-    SyncSamplesOptimizer,
-)
-from ray.rllib.test.test_policy_evaluator import (
-    MockEnv,
-    MockEnv2,
-    MockPolicyGraph,
-)
+from ray.rllib.optimizers import (AsyncGradientsOptimizer,
+                                  SyncReplayOptimizer, SyncSamplesOptimizer)
+from ray.rllib.test.test_policy_evaluator import (MockEnv, MockEnv2,
+                                                  MockPolicyGraph)
 from ray.tune.registry import register_env
 
 

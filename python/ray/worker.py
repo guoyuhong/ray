@@ -30,13 +30,8 @@ import ray.serialization as serialization
 import ray.services as services
 import ray.signature
 from ray import import_thread, profiling
-from ray.utils import (
-    binary_to_hex,
-    check_oversized_pickle,
-    is_cython,
-    random_string,
-    thread_safe_client,
-)
+from ray.utils import (binary_to_hex, check_oversized_pickle,
+                       is_cython, random_string, thread_safe_client)
 
 SCRIPT_MODE = 0
 WORKER_MODE = 1

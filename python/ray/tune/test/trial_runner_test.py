@@ -6,13 +6,8 @@ import unittest
 
 import ray
 from ray.rllib import _register_all
-from ray.tune import (
-    Trainable,
-    TuneError,
-    register_env,
-    register_trainable,
-    run_experiments,
-)
+from ray.tune import (Trainable, TuneError, register_env,
+                      register_trainable, run_experiments)
 from ray.tune.experiment import Experiment
 from ray.tune.ray_trial_executor import RayTrialExecutor
 from ray.tune.registry import TRAINABLE_CLASS, _global_registry

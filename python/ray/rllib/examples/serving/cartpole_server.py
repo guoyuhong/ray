@@ -10,16 +10,14 @@ from ray.rllib.agents.dqn import DQNAgent
 from ray.rllib.env.serving_env import ServingEnv
 from ray.rllib.utils.policy_server import PolicyServer
 from ray.tune.logger import pretty_print
-from ray.tune.registry import register_env
 
+from ray.tune.registry import register_env # isort:skip
 """Example of running a policy server. Copy this file for your use case.
 
 To try this out, in two separate shells run:
     $ python cartpole_server.py
     $ python cartpole_client.py
 """
-
-
 
 SERVER_ADDRESS = "localhost"
 SERVER_PORT = 8900

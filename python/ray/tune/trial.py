@@ -13,14 +13,8 @@ import ray
 import ray.tune.registry
 from ray.tune import TuneError
 from ray.tune.logger import UnifiedLogger, pretty_print
-from ray.tune.result import (
-    DEFAULT_RESULTS_DIR,
-    DONE,
-    HOSTNAME,
-    PID,
-    TIME_TOTAL_S,
-    TRAINING_ITERATION,
-)
+from ray.tune.result import (DEFAULT_RESULTS_DIR, DONE, HOSTNAME,
+                             PID, TIME_TOTAL_S, TRAINING_ITERATION)
 from ray.utils import binary_to_hex, random_string
 
 DEBUG_PRINT_INTERVAL = 5

@@ -32,7 +32,8 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
 import ray
-from ray.tune import Trainable, grid_search, register_trainable, run_experiments
+from ray.tune import (Trainable, grid_search,
+                      register_trainable, run_experiments)
 from ray.tune.schedulers import HyperBandScheduler
 
 activation_fn = None  # e.g. tf.nn.relu

@@ -13,7 +13,6 @@ except Exception as e:
     hpo = None
 
 
-
 class HyperOptSearch(SuggestionAlgorithm):
     """A wrapper around HyperOpt to provide trial suggestions.
 

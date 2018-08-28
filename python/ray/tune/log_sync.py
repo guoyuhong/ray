@@ -15,7 +15,6 @@ try:  # py3
 except ImportError:  # py2
     from pipes import quote
 
-
 # Map from (logdir, remote_dir) -> syncer
 _syncers = {}
 

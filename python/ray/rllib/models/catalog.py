@@ -6,13 +6,10 @@ import gym
 import numpy as np
 import tensorflow as tf
 
-from ray.rllib.models.action_dist import (
-    Categorical,
-    Deterministic,
-    DiagGaussian,
-    MultiActionDistribution,
-    squash_to_range,
-)
+from ray.rllib.models.action_dist import (Categorical, Deterministic,
+                                          DiagGaussian,
+                                          MultiActionDistribution,
+                                          squash_to_range)
 from ray.rllib.models.fcnet import FullyConnectedNetwork
 from ray.rllib.models.lstm import LSTM
 from ray.rllib.models.multiagentfcnet import MultiAgentFullyConnectedNetwork

@@ -6,12 +6,10 @@ import tensorflow.contrib.layers as layers
 from gym.spaces import Box
 
 import ray
-from ray.rllib.agents.dqn.dqn_policy_graph import (
-    _huber_loss,
-    _minimize_and_clip,
-    _postprocess_dqn,
-    _scope_vars,
-)
+from ray.rllib.agents.dqn.dqn_policy_graph import (_huber_loss,
+                                                   _minimize_and_clip,
+                                                   _postprocess_dqn,
+                                                   _scope_vars)
 from ray.rllib.evaluation.tf_policy_graph import TFPolicyGraph
 from ray.rllib.models import ModelCatalog
 from ray.rllib.utils.error import UnsupportedSpaceException

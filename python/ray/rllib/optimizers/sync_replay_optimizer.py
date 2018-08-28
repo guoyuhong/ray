@@ -5,16 +5,11 @@ import collections
 import numpy as np
 
 import ray
-from ray.rllib.evaluation.sample_batch import (
-    DEFAULT_POLICY_ID,
-    MultiAgentBatch,
-    SampleBatch,
-)
+from ray.rllib.evaluation.sample_batch import (DEFAULT_POLICY_ID,
+                                               MultiAgentBatch, SampleBatch)
 from ray.rllib.optimizers.policy_optimizer import PolicyOptimizer
-from ray.rllib.optimizers.replay_buffer import (
-    PrioritizedReplayBuffer,
-    ReplayBuffer,
-)
+from ray.rllib.optimizers.replay_buffer import (PrioritizedReplayBuffer,
+                                                ReplayBuffer)
 from ray.rllib.utils.compression import pack_if_needed
 from ray.rllib.utils.filter import RunningStat
 from ray.rllib.utils.schedules import LinearSchedule

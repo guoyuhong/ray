@@ -12,18 +12,11 @@ import time
 import click
 import yaml
 
-from ray.autoscaler.autoscaler import (
-    fillout_defaults,
-    hash_launch_conf,
-    hash_runtime_conf,
-    validate_config,
-)
+from ray.autoscaler.autoscaler import (fillout_defaults, hash_launch_conf,
+                                       hash_runtime_conf, validate_config)
 from ray.autoscaler.node_provider import NODE_PROVIDERS, get_node_provider
-from ray.autoscaler.tags import (
-    TAG_RAY_LAUNCH_CONFIG,
-    TAG_RAY_NODE_NAME,
-    TAG_RAY_NODE_TYPE,
-)
+from ray.autoscaler.tags import (TAG_RAY_LAUNCH_CONFIG,
+                                 TAG_RAY_NODE_NAME, TAG_RAY_NODE_TYPE)
 from ray.autoscaler.updater import NodeUpdaterProcess
 
 try:  # py3

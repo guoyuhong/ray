@@ -9,11 +9,8 @@ import ray
 from ray.rllib.models import ModelCatalog
 from ray.rllib.models.fcnet import FullyConnectedNetwork
 from ray.rllib.models.model import Model
-from ray.rllib.models.preprocessors import (
-    NoPreprocessor,
-    OneHotPreprocessor,
-    Preprocessor,
-)
+from ray.rllib.models.preprocessors import (NoPreprocessor,
+                                            OneHotPreprocessor, Preprocessor)
 from ray.rllib.models.visionnet import VisionNetwork
 
 

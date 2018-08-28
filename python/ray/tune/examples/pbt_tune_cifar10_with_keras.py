@@ -17,14 +17,8 @@ import argparse
 import numpy as np
 import tensorflow as tf
 from tensorflow.python.keras.datasets import cifar10
-from tensorflow.python.keras.layers import (
-    Convolution2D,
-    Dense,
-    Dropout,
-    Flatten,
-    Input,
-    MaxPooling2D,
-)
+from tensorflow.python.keras.layers import (Convolution2D, Dense, Dropout,
+                                            Flatten, Input, MaxPooling2D)
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras.preprocessing.image import ImageDataGenerator
 

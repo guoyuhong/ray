@@ -9,26 +9,23 @@ from ray.core.generated.DriverTableMessage import DriverTableMessage
 from ray.core.generated.ErrorTableData import ErrorTableData
 from ray.core.generated.GcsTableEntry import GcsTableEntry
 from ray.core.generated.HeartbeatTableData import HeartbeatTableData
-from ray.core.generated.LocalSchedulerInfoMessage import (
-    LocalSchedulerInfoMessage,
-)
 from ray.core.generated.ObjectTableData import ObjectTableData
 from ray.core.generated.ProfileTableData import ProfileTableData
 from ray.core.generated.ray.protocol.Task import Task
 from ray.core.generated.ResultTableReply import ResultTableReply
-from ray.core.generated.SubscribeToDBClientTableReply import (
-    SubscribeToDBClientTableReply,
-)
-from ray.core.generated.SubscribeToNotificationsReply import (
-    SubscribeToNotificationsReply,
-)
 from ray.core.generated.TablePrefix import TablePrefix
 from ray.core.generated.TablePubsub import TablePubsub
-from ray.core.generated.TaskExecutionDependencies import (
-    TaskExecutionDependencies,
-)
 from ray.core.generated.TaskInfo import TaskInfo
 from ray.core.generated.TaskReply import TaskReply
+
+from ray.core.generated.LocalSchedulerInfoMessage import ( # isort:skip
+    LocalSchedulerInfoMessage)
+from ray.core.generated.SubscribeToDBClientTableReply import ( # isort:skip
+    SubscribeToDBClientTableReply)
+from ray.core.generated.SubscribeToNotificationsReply import ( # isort:skip
+    SubscribeToNotificationsReply)
+from ray.core.generated.TaskExecutionDependencies import ( # isort:skip
+    TaskExecutionDependencies)
 
 __all__ = [
     "SubscribeToNotificationsReply", "ResultTableReply",

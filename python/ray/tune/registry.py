@@ -4,11 +4,9 @@ from types import FunctionType
 
 import ray
 import ray.cloudpickle as pickle
-from ray.experimental.internal_kv import (
-    _internal_kv_get,
-    _internal_kv_initialized,
-    _internal_kv_put,
-)
+from ray.experimental.internal_kv import (_internal_kv_get,
+                                          _internal_kv_initialized,
+                                          _internal_kv_put)
 
 TRAINABLE_CLASS = "trainable_class"
 ENV_CREATOR = "env_creator"

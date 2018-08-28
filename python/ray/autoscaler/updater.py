@@ -17,8 +17,6 @@ try:  # py3
 except ImportError:  # py2
     from pipes import quote
 
-
-
 # How long to wait for a node to start, in seconds
 NODE_START_WAIT_S = 300
 SSH_CHECK_INTERVAL = 5
