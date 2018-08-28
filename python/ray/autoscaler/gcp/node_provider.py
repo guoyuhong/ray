@@ -1,16 +1,14 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-from uuid import uuid4
-import time
+from __future__ import absolute_import, division, print_function
 
 import logging
+import time
+from uuid import uuid4
+
 from googleapiclient import discovery
 
+from ray.autoscaler.gcp.config import MAX_POLLS, POLL_INTERVAL
 from ray.autoscaler.node_provider import NodeProvider
 from ray.autoscaler.tags import TAG_RAY_CLUSTER_NAME, TAG_RAY_NODE_NAME
-from ray.autoscaler.gcp.config import MAX_POLLS, POLL_INTERVAL
 
 INSTANCE_NAME_MAX_LEN = 64
 INSTANCE_NAME_UUID_LEN = 8

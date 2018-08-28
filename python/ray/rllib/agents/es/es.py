@@ -1,25 +1,21 @@
 # Code in this file is copied and adapted from
 # https://github.com/openai/evolution-strategies-starter.
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from collections import namedtuple
-import numpy as np
 import os
 import pickle
 import time
+from collections import namedtuple
+
+import numpy as np
 
 import ray
 from ray.rllib.agents import Agent
-from ray.tune.trial import Resources
-
-from ray.rllib.agents.es import optimizers
-from ray.rllib.agents.es import policies
-from ray.rllib.agents.es import tabular_logger as tlogger
-from ray.rllib.agents.es import utils
+from ray.rllib.agents.es import (optimizers, policies,
+                                 tabular_logger as tlogger, utils)
 from ray.rllib.utils import merge_dicts
+from ray.tune.trial import Resources
 
 Result = namedtuple("Result", [
     "noise_indices", "noisy_returns", "sign_noisy_returns", "noisy_lengths",

@@ -1,6 +1,4 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import argparse
 import json
@@ -10,9 +8,9 @@ import os
 from six import string_types
 
 from ray.tune import TuneError
+from ray.tune.logger import _SafeFallbackEncoder
 from ray.tune.result import DEFAULT_RESULTS_DIR
 from ray.tune.trial import Resources, Trial
-from ray.tune.logger import _SafeFallbackEncoder
 
 
 def json_to_resources(data):

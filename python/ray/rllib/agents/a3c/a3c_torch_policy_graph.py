@@ -1,16 +1,14 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import torch
 import torch.nn.functional as F
 from torch import nn
 
 import ray
-from ray.rllib.models.pytorch.misc import var_to_np
-from ray.rllib.models.catalog import ModelCatalog
 from ray.rllib.evaluation.postprocessing import compute_advantages
 from ray.rllib.evaluation.torch_policy_graph import TorchPolicyGraph
+from ray.rllib.models.catalog import ModelCatalog
+from ray.rllib.models.pytorch.misc import var_to_np
 
 
 class A3CLoss(nn.Module):

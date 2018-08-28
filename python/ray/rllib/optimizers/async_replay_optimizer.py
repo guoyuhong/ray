@@ -2,22 +2,20 @@
 
 https://arxiv.org/abs/1803.00933"""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import os
 import random
-import time
 import threading
+import time
 
 import numpy as np
 from six.moves import queue
 
 import ray
+from ray.rllib.evaluation.sample_batch import SampleBatch
 from ray.rllib.optimizers.policy_optimizer import PolicyOptimizer
 from ray.rllib.optimizers.replay_buffer import PrioritizedReplayBuffer
-from ray.rllib.evaluation.sample_batch import SampleBatch
 from ray.rllib.utils.actors import TaskPool, create_colocated
 from ray.rllib.utils.timer import TimerStat
 from ray.rllib.utils.window_stat import WindowStat

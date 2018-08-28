@@ -1,20 +1,19 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import random
 import unittest
+
 import numpy as np
 
 import ray
-from ray.tune.schedulers import (HyperBandScheduler, AsyncHyperBandScheduler,
-                                 PopulationBasedTraining, MedianStoppingRule,
-                                 TrialScheduler)
+from ray.rllib import _register_all
+from ray.tune.schedulers import (AsyncHyperBandScheduler,
+                                 HyperBandScheduler, MedianStoppingRule,
+                                 PopulationBasedTraining, TrialScheduler)
 from ray.tune.schedulers.pbt import explore
-from ray.tune.trial import Trial, Resources, Checkpoint
+from ray.tune.trial import Checkpoint, Resources, Trial
 from ray.tune.trial_executor import TrialExecutor
 
-from ray.rllib import _register_all
 _register_all()
 
 

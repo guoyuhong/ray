@@ -1,7 +1,9 @@
 from math import cos
-from gym.spaces import Box, Tuple, Discrete
+
 import numpy as np
 from gym.envs.classic_control.mountain_car import MountainCarEnv
+
+from gym.spaces import Box, Discrete, Tuple # isort:skip
 """
 Multiagent mountain car that sums and then
 averages its actions to produce the velocity

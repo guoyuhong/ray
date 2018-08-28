@@ -1,17 +1,16 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from collections import defaultdict, namedtuple
-import six.moves.queue as queue
 import threading
+from collections import defaultdict, namedtuple
 
-from ray.rllib.evaluation.episode import MultiAgentEpisode
-from ray.rllib.evaluation.sample_batch import MultiAgentSampleBatchBuilder, \
-    MultiAgentBatch
-from ray.rllib.evaluation.tf_policy_graph import TFPolicyGraph
+import six.moves.queue as queue
+
 from ray.rllib.env.async_vector_env import AsyncVectorEnv
-from ray.rllib.env.atari_wrappers import get_wrapper_by_cls, MonitorEnv
+from ray.rllib.env.atari_wrappers import MonitorEnv, get_wrapper_by_cls
+from ray.rllib.evaluation.episode import MultiAgentEpisode
+from ray.rllib.evaluation.sample_batch import (MultiAgentBatch,
+                                               MultiAgentSampleBatchBuilder)
+from ray.rllib.evaluation.tf_policy_graph import TFPolicyGraph
 from ray.rllib.utils.tf_run_builder import TFRunBuilder
 
 RolloutMetrics = namedtuple(

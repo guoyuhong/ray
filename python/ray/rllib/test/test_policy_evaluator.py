@@ -1,19 +1,18 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import gym
 import time
 import unittest
 
+import gym
+
 import ray
-from ray.rllib.agents.pg import PGAgent
 from ray.rllib.agents.a3c import A2CAgent
-from ray.rllib.evaluation.policy_evaluator import PolicyEvaluator
+from ray.rllib.agents.pg import PGAgent
+from ray.rllib.env.vector_env import VectorEnv
 from ray.rllib.evaluation.metrics import collect_metrics
+from ray.rllib.evaluation.policy_evaluator import PolicyEvaluator
 from ray.rllib.evaluation.policy_graph import PolicyGraph
 from ray.rllib.evaluation.postprocessing import compute_advantages
-from ray.rllib.env.vector_env import VectorEnv
 from ray.tune.registry import register_env
 
 

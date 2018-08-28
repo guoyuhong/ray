@@ -1,11 +1,9 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import unittest
 
-from ray.tune.experiment import Experiment, convert_to_experiment_list
 from ray.tune.error import TuneError
+from ray.tune.experiment import Experiment, convert_to_experiment_list
 
 
 class ExperimentTest(unittest.TestCase):

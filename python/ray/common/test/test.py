@@ -1,11 +1,10 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import numpy as np
 import pickle
 import sys
 import unittest
+
+import numpy as np
 
 import ray.local_scheduler as local_scheduler
 import ray.ray_constants as ray_constants

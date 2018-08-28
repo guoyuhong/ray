@@ -1,18 +1,16 @@
 # Code in this file is copied and adapted from
 # https://github.com/openai/evolution-strategies-starter.
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import gym
 import numpy as np
 import tensorflow as tf
 
 import ray
-from ray.rllib.utils.filter import get_filter
-from ray.rllib.utils.error import UnsupportedSpaceException
 from ray.rllib.models import ModelCatalog
+from ray.rllib.utils.error import UnsupportedSpaceException
+from ray.rllib.utils.filter import get_filter
 
 
 def rollout(policy, env, timestep_limit=None, add_noise=False, offset=0):

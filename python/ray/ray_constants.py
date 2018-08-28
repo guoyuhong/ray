@@ -1,11 +1,9 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-"""Ray constants used in the Python code."""
+from __future__ import absolute_import, division, print_function
 
 import os
 
-import ray
+import ray # isort:skip
+"""Ray constants used in the Python code."""
 
 
 def env_integer(key, default):

@@ -1,27 +1,26 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
+
+import pickle
 
 import gym
-import pickle
 import tensorflow as tf
 
 import ray
-from ray.rllib.models import ModelCatalog
 from ray.rllib.env.async_vector_env import AsyncVectorEnv
-from ray.rllib.env.atari_wrappers import wrap_deepmind, is_atari
+from ray.rllib.env.atari_wrappers import is_atari, wrap_deepmind
 from ray.rllib.env.env_context import EnvContext
+from ray.rllib.env.multi_agent_env import MultiAgentEnv
 from ray.rllib.env.serving_env import ServingEnv
 from ray.rllib.env.vector_env import VectorEnv
-from ray.rllib.env.multi_agent_env import MultiAgentEnv
 from ray.rllib.evaluation.interface import EvaluatorInterface
-from ray.rllib.evaluation.sample_batch import MultiAgentBatch, \
-    DEFAULT_POLICY_ID
+from ray.rllib.evaluation.policy_graph import PolicyGraph
+from ray.rllib.evaluation.sample_batch import (DEFAULT_POLICY_ID,
+                                               MultiAgentBatch)
 from ray.rllib.evaluation.sampler import AsyncSampler, SyncSampler
+from ray.rllib.evaluation.tf_policy_graph import TFPolicyGraph
+from ray.rllib.models import ModelCatalog
 from ray.rllib.utils.compression import pack
 from ray.rllib.utils.filter import get_filter
-from ray.rllib.evaluation.policy_graph import PolicyGraph
-from ray.rllib.evaluation.tf_policy_graph import TFPolicyGraph
 from ray.rllib.utils.tf_run_builder import TFRunBuilder
 
 

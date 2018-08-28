@@ -1,20 +1,19 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import collections
+
 import numpy as np
 
 import ray
-from ray.rllib.optimizers.replay_buffer import ReplayBuffer, \
-    PrioritizedReplayBuffer
+from ray.rllib.evaluation.sample_batch import (DEFAULT_POLICY_ID,
+                                               MultiAgentBatch, SampleBatch)
 from ray.rllib.optimizers.policy_optimizer import PolicyOptimizer
-from ray.rllib.evaluation.sample_batch import SampleBatch, DEFAULT_POLICY_ID, \
-    MultiAgentBatch
+from ray.rllib.optimizers.replay_buffer import (PrioritizedReplayBuffer,
+                                                ReplayBuffer)
 from ray.rllib.utils.compression import pack_if_needed
 from ray.rllib.utils.filter import RunningStat
-from ray.rllib.utils.timer import TimerStat
 from ray.rllib.utils.schedules import LinearSchedule
+from ray.rllib.utils.timer import TimerStat
 
 
 class SyncReplayOptimizer(PolicyOptimizer):

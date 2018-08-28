@@ -1,21 +1,19 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import distutils.spawn
 import os
 import subprocess
 import time
 
-try:  # py3
-    from shlex import quote
-except ImportError:  # py2
-    from pipes import quote
-
 import ray
 from ray.tune.cluster_info import get_ssh_key, get_ssh_user
 from ray.tune.error import TuneError
 from ray.tune.result import DEFAULT_RESULTS_DIR
+
+try:  # py3
+    from shlex import quote
+except ImportError:  # py2
+    from pipes import quote
 
 # Map from (logdir, remote_dir) -> syncer
 _syncers = {}

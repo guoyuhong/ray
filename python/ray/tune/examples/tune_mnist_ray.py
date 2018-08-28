@@ -23,22 +23,19 @@ https://www.tensorflow.org/get_started/mnist/pros
 # pylint: disable=invalid-name
 # pylint: disable=g-bad-import-order
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import argparse
 import sys
 import tempfile
 import time
 
-import ray
-from ray.tune import grid_search, run_experiments, register_trainable
-
-from tensorflow.examples.tutorials.mnist import input_data
 import numpy as np
-
 import tensorflow as tf
+from tensorflow.examples.tutorials.mnist import input_data
+
+import ray
+from ray.tune import grid_search, register_trainable, run_experiments
 
 FLAGS = None
 status_reporter = None  # used to report training status back to Ray

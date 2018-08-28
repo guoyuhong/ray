@@ -22,9 +22,7 @@ by Espeholt, Soyer, Munos et al.
 See https://arxiv.org/abs/1802.01561 for the full paper.
 """
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import collections
 

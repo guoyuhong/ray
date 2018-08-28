@@ -22,21 +22,19 @@ https://www.tensorflow.org/get_started/mnist/pros
 # pylint: disable=invalid-name
 # pylint: disable=g-bad-import-order
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import argparse
 import time
 
-import ray
-from ray.tune import grid_search, run_experiments, register_trainable, \
-    Trainable
-from ray.tune.schedulers import HyperBandScheduler
+import numpy as np
+import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 
-import tensorflow as tf
-import numpy as np
+import ray
+from ray.tune import (Trainable, grid_search,
+                      register_trainable, run_experiments)
+from ray.tune.schedulers import HyperBandScheduler
 
 activation_fn = None  # e.g. tf.nn.relu
 

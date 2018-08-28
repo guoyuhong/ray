@@ -1,18 +1,18 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from gym.spaces import Box
 import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
+from gym.spaces import Box
 
 import ray
-from ray.rllib.agents.dqn.dqn_policy_graph import _huber_loss, \
-    _minimize_and_clip, _scope_vars, _postprocess_dqn
+from ray.rllib.agents.dqn.dqn_policy_graph import (_huber_loss,
+                                                   _minimize_and_clip,
+                                                   _postprocess_dqn,
+                                                   _scope_vars)
+from ray.rllib.evaluation.tf_policy_graph import TFPolicyGraph
 from ray.rllib.models import ModelCatalog
 from ray.rllib.utils.error import UnsupportedSpaceException
-from ray.rllib.evaluation.tf_policy_graph import TFPolicyGraph
 
 A_SCOPE = "a_func"
 P_SCOPE = "p_func"

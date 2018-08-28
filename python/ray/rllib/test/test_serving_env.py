@@ -1,20 +1,19 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import gym
-import numpy as np
 import random
 import unittest
 import uuid
 
+import gym
+import numpy as np
+
 import ray
 from ray.rllib.agents.dqn import DQNAgent
 from ray.rllib.agents.pg import PGAgent
-from ray.rllib.evaluation.policy_evaluator import PolicyEvaluator
 from ray.rllib.env.serving_env import ServingEnv
-from ray.rllib.test.test_policy_evaluator import BadPolicyGraph, \
-    MockPolicyGraph, MockEnv
+from ray.rllib.evaluation.policy_evaluator import PolicyEvaluator
+from ray.rllib.test.test_policy_evaluator import (BadPolicyGraph, MockEnv,
+                                                  MockPolicyGraph)
 from ray.tune.registry import register_env
 
 

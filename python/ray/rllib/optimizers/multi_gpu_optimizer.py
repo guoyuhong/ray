@@ -1,16 +1,15 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
+
+import os
+from collections import defaultdict
 
 import numpy as np
-from collections import defaultdict
-import os
 import tensorflow as tf
 
 import ray
 from ray.rllib.evaluation.tf_policy_graph import TFPolicyGraph
-from ray.rllib.optimizers.policy_optimizer import PolicyOptimizer
 from ray.rllib.optimizers.multi_gpu_impl import LocalSyncParallelOptimizer
+from ray.rllib.optimizers.policy_optimizer import PolicyOptimizer
 from ray.rllib.utils.timer import TimerStat
 
 

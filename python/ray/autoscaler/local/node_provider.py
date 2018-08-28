@@ -1,12 +1,11 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from filelock import FileLock
 import json
+import logging
 import os
 import socket
-import logging
+
+from filelock import FileLock
 
 from ray.autoscaler.node_provider import NodeProvider
 from ray.autoscaler.tags import TAG_RAY_NODE_TYPE

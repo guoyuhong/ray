@@ -1,10 +1,8 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
+from ray.rllib.env.multi_agent_env import MultiAgentEnv
 from ray.rllib.env.serving_env import ServingEnv
 from ray.rllib.env.vector_env import VectorEnv
-from ray.rllib.env.multi_agent_env import MultiAgentEnv
 
 
 class AsyncVectorEnv(object):

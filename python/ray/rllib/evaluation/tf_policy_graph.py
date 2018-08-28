@@ -1,15 +1,13 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 
 import ray
 from ray.rllib.evaluation.policy_graph import PolicyGraph
 from ray.rllib.models.lstm import chop_into_sequences
-from ray.rllib.utils.tf_run_builder import TFRunBuilder
 from ray.rllib.utils.schedules import ConstantSchedule, PiecewiseSchedule
+from ray.rllib.utils.tf_run_builder import TFRunBuilder
 
 
 class TFPolicyGraph(PolicyGraph):

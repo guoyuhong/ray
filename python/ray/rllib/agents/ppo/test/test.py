@@ -1,14 +1,13 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import unittest
+
 import numpy as np
 import tensorflow as tf
 from numpy.testing import assert_allclose
 
+from ray.rllib.agents.ppo.utils import concatenate, flatten
 from ray.rllib.models.action_dist import Categorical
-from ray.rllib.agents.ppo.utils import flatten, concatenate
 
 
 # TODO(ekl): move to rllib/models dir

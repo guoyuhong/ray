@@ -1,6 +1,12 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
+
+import numpy as np
+import tensorflow as tf
+import tensorflow.contrib.rnn as rnn
+
+from ray.rllib.models.misc import linear, normc_initializer
+
+from ray.rllib.models.model import Model # isort:skip
 """LSTM support for RLlib.
 
 The main trick here is that we add the time dimension at the last moment.
@@ -12,13 +18,6 @@ reshaping is possible.
 See the add_time_dimension() and chop_into_sequences() functions below for
 more info.
 """
-
-import numpy as np
-import tensorflow as tf
-import tensorflow.contrib.rnn as rnn
-
-from ray.rllib.models.misc import linear, normc_initializer
-from ray.rllib.models.model import Model
 
 
 def add_time_dimension(padded_inputs, seq_lens):

@@ -1,8 +1,6 @@
 """The Ray autoscaler uses tags/labels to associate metadata with instances."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 # Tag for the name of the node
 TAG_RAY_NODE_NAME = "ray-node-name"

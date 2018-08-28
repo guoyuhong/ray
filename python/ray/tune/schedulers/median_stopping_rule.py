@@ -1,12 +1,11 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import collections
+
 import numpy as np
 
-from ray.tune.trial import Trial
 from ray.tune.schedulers.trial_scheduler import FIFOScheduler, TrialScheduler
+from ray.tune.trial import Trial
 
 
 class MedianStoppingRule(FIFOScheduler):

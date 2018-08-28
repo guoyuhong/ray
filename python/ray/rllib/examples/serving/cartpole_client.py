@@ -1,17 +1,16 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
+
+import argparse
+
+import gym
+
+from ray.rllib.utils.policy_client import PolicyClient #isort:skip
 """Example of querying a policy server. Copy this file for your use case.
 
 To try this out, in two separate shells run:
     $ python cartpole_server.py
     $ python cartpole_client.py
 """
-
-import argparse
-import gym
-
-from ray.rllib.utils.policy_client import PolicyClient
 
 parser = argparse.ArgumentParser()
 parser.add_argument(

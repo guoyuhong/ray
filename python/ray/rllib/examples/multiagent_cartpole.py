@@ -1,6 +1,17 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
+
+import argparse
+import random
+
+import gym
+
+import ray
+from ray import tune
+from ray.rllib.agents.pg.pg_policy_graph import PGPolicyGraph
+from ray.rllib.test.test_multi_agent_env import MultiCartpole
+from ray.tune import run_experiments
+
+from ray.tune.registry import register_env # isort:skip
 """Simple example of setting up a multi-agent policy mapping.
 
 Control the number of agents and policies via --num-agents and --num-policies.
@@ -11,17 +22,6 @@ many TF policy graphs will take some time.
 Also, TF evals might slow down with large numbers of policies. To debug TF
 execution, set the TF_TIMELINE_DIR environment variable.
 """
-
-import argparse
-import gym
-import random
-
-import ray
-from ray import tune
-from ray.rllib.agents.pg.pg_policy_graph import PGPolicyGraph
-from ray.rllib.test.test_multi_agent_env import MultiCartpole
-from ray.tune import run_experiments
-from ray.tune.registry import register_env
 
 parser = argparse.ArgumentParser()
 

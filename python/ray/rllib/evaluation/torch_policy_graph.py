@@ -1,9 +1,10 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
+
+from threading import Lock
 
 import numpy as np
-from threading import Lock
+
+from ray.rllib.evaluation.policy_graph import PolicyGraph
 
 try:
     import torch
@@ -11,8 +12,6 @@ try:
     from ray.rllib.models.pytorch.misc import var_to_np
 except ImportError:
     pass  # soft dep
-
-from ray.rllib.evaluation.policy_graph import PolicyGraph
 
 
 class TorchPolicyGraph(PolicyGraph):

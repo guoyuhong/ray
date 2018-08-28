@@ -1,13 +1,12 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 from types import FunctionType
 
 import ray
 import ray.cloudpickle as pickle
-from ray.experimental.internal_kv import _internal_kv_initialized, \
-    _internal_kv_get, _internal_kv_put
+from ray.experimental.internal_kv import (_internal_kv_get,
+                                          _internal_kv_initialized,
+                                          _internal_kv_put)
 
 TRAINABLE_CLASS = "trainable_class"
 ENV_CREATOR = "env_creator"

@@ -1,21 +1,19 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import copy
-from collections import defaultdict
 import heapq
 import json
 import os
-import redis
 import sys
 import time
+from collections import defaultdict
+
+import redis
 
 import ray
 import ray.gcs_utils
 import ray.ray_constants as ray_constants
-from ray.utils import (decode, binary_to_object_id, binary_to_hex,
-                       hex_to_binary)
+from ray.utils import binary_to_hex, binary_to_object_id, decode, hex_to_binary
 
 # This mapping from integer to task state string must be kept up-to-date with
 # the scheduling_state enum in task.h.

@@ -1,36 +1,34 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import binascii
 import copy
-import json
 import hashlib
+import json
 import logging
 import math
 import os
-from six.moves import queue
 import subprocess
 import threading
 import time
-
 from collections import defaultdict
 from datetime import datetime
 
 import numpy as np
 import yaml
+from six.moves import queue
 
-from ray.ray_constants import AUTOSCALER_MAX_NUM_FAILURES, \
-    AUTOSCALER_MAX_LAUNCH_BATCH, AUTOSCALER_MAX_CONCURRENT_LAUNCHES,\
-    AUTOSCALER_UPDATE_INTERVAL_S, AUTOSCALER_HEARTBEAT_TIMEOUT_S
-from ray.autoscaler.node_provider import get_node_provider, \
-    get_default_config
-from ray.autoscaler.updater import NodeUpdaterProcess
-from ray.autoscaler.docker import dockerize_if_needed
-from ray.autoscaler.tags import (TAG_RAY_LAUNCH_CONFIG, TAG_RAY_RUNTIME_CONFIG,
-                                 TAG_RAY_NODE_STATUS, TAG_RAY_NODE_TYPE,
-                                 TAG_RAY_NODE_NAME)
 import ray.services as services
+from ray.autoscaler.docker import dockerize_if_needed
+from ray.autoscaler.node_provider import get_default_config, get_node_provider
+from ray.autoscaler.tags import (TAG_RAY_LAUNCH_CONFIG, TAG_RAY_NODE_NAME,
+                                 TAG_RAY_NODE_STATUS, TAG_RAY_NODE_TYPE,
+                                 TAG_RAY_RUNTIME_CONFIG)
+from ray.autoscaler.updater import NodeUpdaterProcess
+from ray.ray_constants import (AUTOSCALER_HEARTBEAT_TIMEOUT_S,
+                               AUTOSCALER_MAX_CONCURRENT_LAUNCHES,
+                               AUTOSCALER_MAX_LAUNCH_BATCH,
+                               AUTOSCALER_MAX_NUM_FAILURES,
+                               AUTOSCALER_UPDATE_INTERVAL_S)
 
 logger = logging.getLogger(__name__)
 

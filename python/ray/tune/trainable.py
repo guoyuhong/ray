@@ -1,8 +1,4 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-from datetime import datetime
+from __future__ import absolute_import, division, print_function
 
 import gzip
 import io
@@ -12,11 +8,12 @@ import shutil
 import tempfile
 import time
 import uuid
+from datetime import datetime
 
 import ray
 from ray.tune.logger import UnifiedLogger
-from ray.tune.result import (DEFAULT_RESULTS_DIR, TIME_THIS_ITER_S,
-                             TIMESTEPS_THIS_ITER, DONE, TIMESTEPS_TOTAL)
+from ray.tune.result import (DEFAULT_RESULTS_DIR, DONE, TIME_THIS_ITER_S,
+                             TIMESTEPS_THIS_ITER, TIMESTEPS_TOTAL)
 from ray.tune.trial import Resources
 
 

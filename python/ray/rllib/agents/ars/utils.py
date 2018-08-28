@@ -1,14 +1,13 @@
 # Code in this file is copied and adapted from
 # https://github.com/openai/evolution-strategies-starter.
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import numpy as np
 import tensorflow as tf
-from ray.rllib.models import ModelCatalog, Model
 import tensorflow.contrib.slim as slim
+
+from ray.rllib.models import Model, ModelCatalog
 from ray.rllib.models.misc import normc_initializer
 
 

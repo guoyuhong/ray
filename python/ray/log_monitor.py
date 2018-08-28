@@ -1,17 +1,15 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import argparse
 import logging
 import os
-import redis
 import time
 
+import redis
+
 import ray.ray_constants as ray_constants
-from ray.services import get_ip_address
-from ray.services import get_port
 import ray.utils
+from ray.services import get_ip_address, get_port
 
 # Logger for this module. It should be configured at the entry point
 # into the program using Ray. Ray configures it by default automatically

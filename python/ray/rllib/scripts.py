@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import argparse
 
-from ray.rllib import train
-from ray.rllib import rollout
+from ray.rllib import rollout, train
 
 EXAMPLE_USAGE = """
 Example usage for training:

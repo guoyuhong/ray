@@ -1,14 +1,13 @@
 # coding: utf-8
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import os
 import time
 import traceback
+
 import ray
 from ray.tune.logger import NoopLogger
-from ray.tune.trial import Trial, Resources, Checkpoint
+from ray.tune.trial import Checkpoint, Resources, Trial
 from ray.tune.trial_executor import TrialExecutor
 
 

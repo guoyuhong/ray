@@ -1,14 +1,12 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import time
 import threading
+import time
 import traceback
 
 from ray.tune import TuneError
-from ray.tune.trainable import Trainable
 from ray.tune.result import TIMESTEPS_TOTAL
+from ray.tune.trainable import Trainable
 
 
 class StatusReporter(object):

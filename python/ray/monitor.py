@@ -1,6 +1,4 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import argparse
 import binascii
@@ -12,11 +10,11 @@ from collections import Counter, defaultdict
 import redis
 
 import ray
-from ray.autoscaler.autoscaler import LoadMetrics, StandardAutoscaler
 import ray.cloudpickle as pickle
 import ray.gcs_utils
-import ray.utils
 import ray.ray_constants as ray_constants
+import ray.utils
+from ray.autoscaler.autoscaler import LoadMetrics, StandardAutoscaler
 from ray.services import get_ip_address, get_port
 from ray.utils import binary_to_hex, binary_to_object_id, hex_to_binary
 from ray.worker import NIL_ACTOR_ID

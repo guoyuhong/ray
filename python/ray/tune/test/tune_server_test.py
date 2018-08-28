@@ -1,16 +1,14 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import unittest
 import socket
+import unittest
 
 import ray
 from ray.rllib import _register_all
-from ray.tune.trial import Trial, Resources
-from ray.tune.web_server import TuneClient
 from ray.tune.suggest import BasicVariantGenerator
+from ray.tune.trial import Resources, Trial
 from ray.tune.trial_runner import TrialRunner
+from ray.tune.web_server import TuneClient
 
 
 def get_valid_port():

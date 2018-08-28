@@ -1,10 +1,9 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from ray.rllib.models.pytorch.model import Model, SlimFC
-from ray.rllib.models.pytorch.misc import normc_initializer
 import torch.nn as nn
+
+from ray.rllib.models.pytorch.misc import normc_initializer
+from ray.rllib.models.pytorch.model import Model, SlimFC
 
 
 class FullyConnectedNetwork(Model):

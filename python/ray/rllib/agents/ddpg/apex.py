@@ -1,8 +1,6 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from ray.rllib.agents.ddpg.ddpg import DDPGAgent, DEFAULT_CONFIG as DDPG_CONFIG
+from ray.rllib.agents.ddpg.ddpg import DEFAULT_CONFIG as DDPG_CONFIG, DDPGAgent
 from ray.rllib.utils import merge_dicts
 from ray.tune.trial import Resources
 
