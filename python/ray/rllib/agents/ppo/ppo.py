@@ -1,6 +1,4 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import os
 import pickle
@@ -8,8 +6,8 @@ import pickle
 import ray
 from ray.rllib.agents import Agent, with_common_config
 from ray.rllib.agents.ppo.ppo_policy_graph import PPOPolicyGraph
+from ray.rllib.optimizers import LocalMultiGPUOptimizer, SyncSamplesOptimizer
 from ray.rllib.utils import FilterManager, merge_dicts
-from ray.rllib.optimizers import SyncSamplesOptimizer, LocalMultiGPUOptimizer
 from ray.tune.trial import Resources
 
 DEFAULT_CONFIG = with_common_config({

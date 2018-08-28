@@ -1,23 +1,24 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
+
+from functools import partial
 
 import gym
 import numpy as np
 import tensorflow as tf
-from functools import partial
-
-from ray.tune.registry import RLLIB_MODEL, RLLIB_PREPROCESSOR, \
-    _global_registry
 
 from ray.rllib.models.action_dist import (
-    Categorical, Deterministic, DiagGaussian, MultiActionDistribution,
-    squash_to_range)
-from ray.rllib.models.preprocessors import get_preprocessor
+    Categorical,
+    Deterministic,
+    DiagGaussian,
+    MultiActionDistribution,
+    squash_to_range,
+)
 from ray.rllib.models.fcnet import FullyConnectedNetwork
-from ray.rllib.models.visionnet import VisionNetwork
 from ray.rllib.models.lstm import LSTM
 from ray.rllib.models.multiagentfcnet import MultiAgentFullyConnectedNetwork
+from ray.rllib.models.preprocessors import get_preprocessor
+from ray.rllib.models.visionnet import VisionNetwork
+from ray.tune.registry import RLLIB_MODEL, RLLIB_PREPROCESSOR, _global_registry
 
 MODEL_CONFIGS = [
     # === Built-in options ===

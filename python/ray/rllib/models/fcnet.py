@@ -1,12 +1,10 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import tensorflow as tf
 import tensorflow.contrib.slim as slim
 
+from ray.rllib.models.misc import get_activation_fn, normc_initializer
 from ray.rllib.models.model import Model
-from ray.rllib.models.misc import normc_initializer, get_activation_fn
 
 
 class FullyConnectedNetwork(Model):

@@ -1,14 +1,12 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import pandas as pd
-from pandas.api.types import is_string_dtype, is_numeric_dtype
-
+import json
 import os
 import os.path as osp
+
 import numpy as np
-import json
+import pandas as pd
+from pandas.api.types import is_numeric_dtype, is_string_dtype
 
 
 def _flatten_dict(dt):

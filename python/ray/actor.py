@@ -1,6 +1,4 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import copy
 import hashlib
@@ -14,9 +12,9 @@ import ray.ray_constants as ray_constants
 import ray.signature as signature
 import ray.worker
 from ray.utils import (
-    decode,
     _random_string,
     check_oversized_pickle,
+    decode,
     is_cython,
     push_error_to_driver,
 )

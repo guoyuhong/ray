@@ -1,8 +1,6 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from ray.rllib.agents.a3c.a3c import A3CAgent, DEFAULT_CONFIG as A3C_CONFIG
+from ray.rllib.agents.a3c.a3c import DEFAULT_CONFIG as A3C_CONFIG, A3CAgent
 from ray.rllib.optimizers import SyncSamplesOptimizer
 from ray.rllib.utils import merge_dicts
 from ray.tune.trial import Resources

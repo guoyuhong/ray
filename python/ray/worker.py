@@ -1,37 +1,35 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import atexit
 import collections
-import colorama
 import hashlib
 import inspect
 import logging
-import numpy as np
 import os
-import redis
 import signal
 import sys
 import threading
 import time
 import traceback
 
+import colorama
+import numpy as np
 # Ray modules
 import pyarrow
 import pyarrow.plasma as plasma
+import redis
+
 import ray.cloudpickle as pickle
 import ray.experimental.state as state
 import ray.gcs_utils
+import ray.local_scheduler
+import ray.plasma
+import ray.ray_constants as ray_constants
 import ray.remote_function
 import ray.serialization as serialization
 import ray.services as services
 import ray.signature
-import ray.local_scheduler
-import ray.plasma
-import ray.ray_constants as ray_constants
-from ray import import_thread
-from ray import profiling
+from ray import import_thread, profiling
 from ray.utils import (
     binary_to_hex,
     check_oversized_pickle,

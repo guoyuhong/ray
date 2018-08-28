@@ -1,15 +1,13 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import unittest
 
 import numpy as np
 
 import ray
-from ray.rllib.test.mock_evaluator import _MockEvaluator
-from ray.rllib.optimizers import AsyncGradientsOptimizer
 from ray.rllib.evaluation import SampleBatch
+from ray.rllib.optimizers import AsyncGradientsOptimizer
+from ray.rllib.test.mock_evaluator import _MockEvaluator
 
 
 class AsyncOptimizerTest(unittest.TestCase):

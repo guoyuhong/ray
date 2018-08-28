@@ -1,7 +1,9 @@
+import numpy as np
+from gym.envs.classic_control.pendulum import PendulumEnv
 from gym.spaces import Box, Tuple
 from gym.utils import seeding
-from gym.envs.classic_control.pendulum import PendulumEnv
-import numpy as np
+
+
 """
  Multiagent pendulum that sums its torques to generate an action
 """

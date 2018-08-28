@@ -1,16 +1,19 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import csv
 import json
-import numpy as np
 import os
+
+import numpy as np
 import yaml
 
 from ray.tune.log_sync import get_syncer
-from ray.tune.result import NODE_IP, TRAINING_ITERATION, TIME_TOTAL_S, \
-    TIMESTEPS_TOTAL
+from ray.tune.result import (
+    NODE_IP,
+    TIME_TOTAL_S,
+    TIMESTEPS_TOTAL,
+    TRAINING_ITERATION,
+)
 
 try:
     import tensorflow as tf

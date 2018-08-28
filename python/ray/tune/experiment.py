@@ -1,14 +1,13 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import copy
-import six
 import types
 
-from ray.tune.result import DEFAULT_RESULTS_DIR
+import six
+
 from ray.tune.error import TuneError
 from ray.tune.registry import register_trainable
+from ray.tune.result import DEFAULT_RESULTS_DIR
 
 
 class Experiment(object):

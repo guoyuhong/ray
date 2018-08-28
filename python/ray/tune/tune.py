@@ -1,16 +1,18 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import time
 
 from ray.tune.error import TuneError
-from ray.tune.suggest import BasicVariantGenerator
-from ray.tune.trial import Trial, DEBUG_PRINT_INTERVAL
 from ray.tune.log_sync import wait_for_log_sync
+from ray.tune.schedulers import (
+    AsyncHyperBandScheduler,
+    FIFOScheduler,
+    HyperBandScheduler,
+    MedianStoppingRule,
+)
+from ray.tune.suggest import BasicVariantGenerator
+from ray.tune.trial import DEBUG_PRINT_INTERVAL, Trial
 from ray.tune.trial_runner import TrialRunner
-from ray.tune.schedulers import (HyperBandScheduler, AsyncHyperBandScheduler,
-                                 FIFOScheduler, MedianStoppingRule)
 from ray.tune.web_server import TuneServer
 
 _SCHEDULERS = {

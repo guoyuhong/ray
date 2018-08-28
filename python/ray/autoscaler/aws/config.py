@@ -1,12 +1,10 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from distutils.version import StrictVersion
 import json
 import logging
 import os
 import time
+from distutils.version import StrictVersion
 
 import boto3
 from botocore.config import Config

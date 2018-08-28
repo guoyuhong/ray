@@ -1,12 +1,11 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import numpy as np
 import random
 import sys
 
-from ray.rllib.optimizers.segment_tree import SumSegmentTree, MinSegmentTree
+import numpy as np
+
+from ray.rllib.optimizers.segment_tree import MinSegmentTree, SumSegmentTree
 from ray.rllib.utils.compression import unpack_if_needed
 from ray.rllib.utils.window_stat import WindowStat
 

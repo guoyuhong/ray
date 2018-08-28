@@ -1,15 +1,13 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import random
-import math
 import copy
+import math
+import random
 
 from ray.tune.error import TuneError
-from ray.tune.trial import Trial, Checkpoint
 from ray.tune.schedulers import FIFOScheduler, TrialScheduler
 from ray.tune.suggest.variant_generator import format_vars
+from ray.tune.trial import Checkpoint, Trial
 
 # Parameters are transferred from the top PBT_QUANTILE fraction of trials to
 # the bottom PBT_QUANTILE fraction.

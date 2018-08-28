@@ -1,23 +1,27 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
+import os
 import tempfile
+import time
 from collections import namedtuple
 from datetime import datetime
-import time
-import ray
-import os
 
-from ray.tune import TuneError
-from ray.tune.logger import pretty_print, UnifiedLogger
+import ray
 # NOTE(rkn): We import ray.tune.registry here instead of importing the names we
 # need because there are cyclic imports that may cause specific names to not
 # have been defined yet. See https://github.com/ray-project/ray/issues/1716.
 import ray.tune.registry
-from ray.tune.result import (DEFAULT_RESULTS_DIR, DONE, HOSTNAME, PID,
-                             TIME_TOTAL_S, TRAINING_ITERATION)
-from ray.utils import random_string, binary_to_hex
+from ray.tune import TuneError
+from ray.tune.logger import UnifiedLogger, pretty_print
+from ray.tune.result import (
+    DEFAULT_RESULTS_DIR,
+    DONE,
+    HOSTNAME,
+    PID,
+    TIME_TOTAL_S,
+    TRAINING_ITERATION,
+)
+from ray.utils import binary_to_hex, random_string
 
 DEBUG_PRINT_INTERVAL = 5
 MAX_LEN_IDENTIFIER = 130

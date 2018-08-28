@@ -1,19 +1,23 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import click
 import json
 import logging
 import os
 import subprocess
 
-import ray.services as services
-from ray.autoscaler.commands import (attach_cluster, exec_cluster,
-                                     create_or_update_cluster, rsync,
-                                     teardown_cluster, get_head_node_ip)
+import click
+
 import ray.ray_constants as ray_constants
+import ray.services as services
 import ray.utils
+from ray.autoscaler.commands import (
+    attach_cluster,
+    create_or_update_cluster,
+    exec_cluster,
+    get_head_node_ip,
+    rsync,
+    teardown_cluster,
+)
 
 
 def check_no_existing_redis_clients(node_ip_address, redis_client):

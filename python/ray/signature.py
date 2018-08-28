@@ -1,11 +1,10 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
+import logging
 from collections import namedtuple
+
 import funcsigs
 from funcsigs import Parameter
-import logging
 
 from ray.utils import is_cython
 

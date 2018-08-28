@@ -1,29 +1,36 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import copy
 import hashlib
 import json
+import logging
 import os
+import sys
 import tempfile
 import time
-import sys
-import click
-import logging
 
+import click
 import yaml
+
+from ray.autoscaler.autoscaler import (
+    fillout_defaults,
+    hash_launch_conf,
+    hash_runtime_conf,
+    validate_config,
+)
+from ray.autoscaler.node_provider import NODE_PROVIDERS, get_node_provider
+from ray.autoscaler.tags import (
+    TAG_RAY_LAUNCH_CONFIG,
+    TAG_RAY_NODE_NAME,
+    TAG_RAY_NODE_TYPE,
+)
+from ray.autoscaler.updater import NodeUpdaterProcess
+
 try:  # py3
     from shlex import quote
 except ImportError:  # py2
     from pipes import quote
 
-from ray.autoscaler.autoscaler import validate_config, hash_runtime_conf, \
-    hash_launch_conf, fillout_defaults
-from ray.autoscaler.node_provider import get_node_provider, NODE_PROVIDERS
-from ray.autoscaler.tags import TAG_RAY_NODE_TYPE, TAG_RAY_LAUNCH_CONFIG, \
-    TAG_RAY_NODE_NAME
-from ray.autoscaler.updater import NodeUpdaterProcess
 
 logger = logging.getLogger(__name__)
 

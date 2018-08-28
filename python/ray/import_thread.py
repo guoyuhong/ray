@@ -1,6 +1,4 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import threading
 import traceback
@@ -8,10 +6,7 @@ import traceback
 import redis
 
 import ray
-from ray import ray_constants
-from ray import cloudpickle as pickle
-from ray import profiling
-from ray import utils
+from ray import cloudpickle as pickle, profiling, ray_constants, utils
 
 
 class ImportThread(object):

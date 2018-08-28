@@ -1,16 +1,9 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-"""Example of running a policy server. Copy this file for your use case.
-
-To try this out, in two separate shells run:
-    $ python cartpole_server.py
-    $ python cartpole_client.py
-"""
+from __future__ import absolute_import, division, print_function
 
 import os
-from gym import spaces
+
 import numpy as np
+from gym import spaces
 
 import ray
 from ray.rllib.agents.dqn import DQNAgent
@@ -18,6 +11,15 @@ from ray.rllib.env.serving_env import ServingEnv
 from ray.rllib.utils.policy_server import PolicyServer
 from ray.tune.logger import pretty_print
 from ray.tune.registry import register_env
+
+"""Example of running a policy server. Copy this file for your use case.
+
+To try this out, in two separate shells run:
+    $ python cartpole_server.py
+    $ python cartpole_client.py
+"""
+
+
 
 SERVER_ADDRESS = "localhost"
 SERVER_PORT = 8900

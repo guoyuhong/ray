@@ -1,17 +1,15 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from gym.spaces import Discrete
 import numpy as np
 import tensorflow as tf
 import tensorflow.contrib.layers as layers
+from gym.spaces import Discrete
 
 import ray
-from ray.rllib.models import ModelCatalog
 from ray.rllib.evaluation.sample_batch import SampleBatch
-from ray.rllib.utils.error import UnsupportedSpaceException
 from ray.rllib.evaluation.tf_policy_graph import TFPolicyGraph
+from ray.rllib.models import ModelCatalog
+from ray.rllib.utils.error import UnsupportedSpaceException
 
 Q_SCOPE = "q_func"
 Q_TARGET_SCOPE = "target_q_func"

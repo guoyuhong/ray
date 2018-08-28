@@ -2,24 +2,20 @@
 # https://github.com/openai/evolution-strategies-starter and from
 # https://github.com/modestyachts/ARS
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from collections import namedtuple
-import numpy as np
 import os
 import pickle
 import time
+from collections import namedtuple
+
+import numpy as np
 
 import ray
 from ray.rllib.agents import Agent, with_common_config
-from ray.tune.trial import Resources
-
-from ray.rllib.agents.ars import optimizers
-from ray.rllib.agents.ars import policies
+from ray.rllib.agents.ars import optimizers, policies, utils
 from ray.rllib.agents.es import tabular_logger as tlogger
-from ray.rllib.agents.ars import utils
+from ray.tune.trial import Resources
 
 Result = namedtuple("Result", [
     "noise_indices", "noisy_returns", "sign_noisy_returns", "noisy_lengths",

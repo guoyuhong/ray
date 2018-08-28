@@ -1,14 +1,13 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import unittest
+
 import numpy as np
 
 import ray
-from ray.rllib.utils.filter import RunningStat, MeanStdFilter
-from ray.rllib.utils import FilterManager
 from ray.rllib.test.mock_evaluator import _MockEvaluator
+from ray.rllib.utils import FilterManager
+from ray.rllib.utils.filter import MeanStdFilter, RunningStat
 
 
 class RunningStatTest(unittest.TestCase):

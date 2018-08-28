@@ -1,9 +1,7 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from ray.rllib.models import ModelCatalog
 from ray.rllib.env.atari_wrappers import wrap_deepmind
+from ray.rllib.models import ModelCatalog
 
 
 def wrap_dqn(env, options):

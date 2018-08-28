@@ -1,17 +1,7 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-"""Example of using two different training methods at once in multi-agent.
-
-Here we create a number of CartPole agents, some of which are trained with
-DQN, and some of which are trained with PPO. We periodically sync weights
-between the two trainers (note that no such syncing is needed when using just
-a single training method).
-
-For a simpler example, see also: multiagent_cartpole.py
-"""
+from __future__ import absolute_import, division, print_function
 
 import argparse
+
 import gym
 
 import ray
@@ -22,6 +12,18 @@ from ray.rllib.agents.ppo.ppo_policy_graph import PPOPolicyGraph
 from ray.rllib.test.test_multi_agent_env import MultiCartpole
 from ray.tune.logger import pretty_print
 from ray.tune.registry import register_env
+
+"""Example of using two different training methods at once in multi-agent.
+
+Here we create a number of CartPole agents, some of which are trained with
+DQN, and some of which are trained with PPO. We periodically sync weights
+between the two trainers (note that no such syncing is needed when using just
+a single training method).
+
+For a simpler example, see also: multiagent_cartpole.py
+"""
+
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--num-iters", type=int, default=20)

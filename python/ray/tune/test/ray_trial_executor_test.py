@@ -1,7 +1,5 @@
 # coding: utf-8
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import unittest
 
@@ -9,7 +7,7 @@ import ray
 from ray.rllib import _register_all
 from ray.tune.ray_trial_executor import RayTrialExecutor
 from ray.tune.suggest import BasicVariantGenerator
-from ray.tune.trial import Trial, Checkpoint
+from ray.tune.trial import Checkpoint, Trial
 
 
 class RayTrialExecutorTest(unittest.TestCase):

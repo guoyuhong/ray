@@ -1,6 +1,4 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import binascii
 import json
@@ -19,14 +17,14 @@ from collections import OrderedDict, namedtuple
 from datetime import datetime
 
 import psutil
+import pyarrow
 import redis
 
-import pyarrow
-# Ray modules
-import ray.ray_constants
 import ray.global_scheduler as global_scheduler
 import ray.local_scheduler
 import ray.plasma
+# Ray modules
+import ray.ray_constants
 
 PROCESS_TYPE_MONITOR = "monitor"
 PROCESS_TYPE_LOG_MONITOR = "log_monitor"

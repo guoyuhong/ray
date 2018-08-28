@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import argparse
 import json
@@ -10,10 +8,12 @@ import os
 import pickle
 
 import gym
+
 import ray
 from ray.rllib.agents.agent import get_agent_class
 from ray.rllib.agents.dqn.common.wrappers import wrap_dqn
 from ray.rllib.models import ModelCatalog
+
 
 EXAMPLE_USAGE = """
 Example Usage via RLlib CLI:

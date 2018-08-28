@@ -1,23 +1,23 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-try:  # py3
-    from shlex import quote
-except ImportError:  # py2
-    from pipes import quote
 import logging
 import os
 import subprocess
 import sys
 import tempfile
 import time
-
 from multiprocessing import Process
 from threading import Thread
 
 from ray.autoscaler.node_provider import get_node_provider
 from ray.autoscaler.tags import TAG_RAY_NODE_STATUS, TAG_RAY_RUNTIME_CONFIG
+
+try:  # py3
+    from shlex import quote
+except ImportError:  # py2
+    from pipes import quote
+
+
 
 # How long to wait for a node to start, in seconds
 NODE_START_WAIT_S = 300

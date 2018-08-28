@@ -1,10 +1,8 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 from ray.rllib.agents.agent import with_common_config
-from ray.rllib.agents.dqn.dqn import DQNAgent
 from ray.rllib.agents.ddpg.ddpg_policy_graph import DDPGPolicyGraph
+from ray.rllib.agents.dqn.dqn import DQNAgent
 from ray.rllib.utils.schedules import ConstantSchedule, LinearSchedule
 
 OPTIMIZER_SHARED_CONFIGS = [

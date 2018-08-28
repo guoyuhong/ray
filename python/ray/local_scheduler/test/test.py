@@ -1,8 +1,5 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import numpy as np
 import os
 import signal
 import sys
@@ -10,10 +7,12 @@ import threading
 import time
 import unittest
 
+import numpy as np
+import pyarrow as pa
+
 import ray.local_scheduler as local_scheduler
 import ray.plasma as plasma
 import ray.ray_constants as ray_constants
-import pyarrow as pa
 
 USE_VALGRIND = False
 

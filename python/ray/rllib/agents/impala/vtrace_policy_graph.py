@@ -2,17 +2,17 @@
 
 Keep in sync with changes to A3CPolicyGraph."""
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import tensorflow as tf
 import gym
+import tensorflow as tf
 
 import ray
 from ray.rllib.agents.impala import vtrace
-from ray.rllib.evaluation.tf_policy_graph import TFPolicyGraph, \
-    LearningRateSchedule
+from ray.rllib.evaluation.tf_policy_graph import (
+    LearningRateSchedule,
+    TFPolicyGraph,
+)
 from ray.rllib.models.catalog import ModelCatalog
 from ray.rllib.models.misc import linear, normc_initializer
 from ray.rllib.utils.error import UnsupportedSpaceException

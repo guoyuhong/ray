@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import argparse
+
 import yaml
 
 import ray
 from ray.tune.config_parser import make_parser, resources_to_json
 from ray.tune.tune import _make_scheduler, run_experiments
+
 
 EXAMPLE_USAGE = """
 Training example via RLlib CLI:

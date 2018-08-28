@@ -1,11 +1,11 @@
-import unittest
+import sys
 import traceback
+import unittest
 
 import gym
-from gym.spaces import Box, Discrete, Tuple
-from gym.envs.registration import EnvSpec
 import numpy as np
-import sys
+from gym.envs.registration import EnvSpec
+from gym.spaces import Box, Discrete, Tuple
 
 import ray
 from ray.rllib.agents.agent import get_agent_class

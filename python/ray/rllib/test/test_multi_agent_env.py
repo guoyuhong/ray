@@ -1,23 +1,28 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import gym
 import random
 import unittest
 
+import gym
+
 import ray
+from ray.rllib.agents.dqn.dqn_policy_graph import DQNPolicyGraph
 from ray.rllib.agents.pg import PGAgent
 from ray.rllib.agents.pg.pg_policy_graph import PGPolicyGraph
-from ray.rllib.agents.dqn.dqn_policy_graph import DQNPolicyGraph
-from ray.rllib.optimizers import SyncSamplesOptimizer, \
-    SyncReplayOptimizer, AsyncGradientsOptimizer
-from ray.rllib.test.test_policy_evaluator import MockEnv, MockEnv2, \
-    MockPolicyGraph
-from ray.rllib.evaluation.policy_evaluator import PolicyEvaluator
-from ray.rllib.evaluation.metrics import collect_metrics
 from ray.rllib.env.async_vector_env import _MultiAgentEnvToAsync
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
+from ray.rllib.evaluation.metrics import collect_metrics
+from ray.rllib.evaluation.policy_evaluator import PolicyEvaluator
+from ray.rllib.optimizers import (
+    AsyncGradientsOptimizer,
+    SyncReplayOptimizer,
+    SyncSamplesOptimizer,
+)
+from ray.rllib.test.test_policy_evaluator import (
+    MockEnv,
+    MockEnv2,
+    MockPolicyGraph,
+)
 from ray.tune.registry import register_env
 
 

@@ -1,6 +1,4 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import collections
 import os
@@ -10,8 +8,8 @@ import traceback
 from ray.tune import TuneError
 from ray.tune.ray_trial_executor import RayTrialExecutor
 from ray.tune.result import TIME_THIS_ITER_S
-from ray.tune.trial import Trial
 from ray.tune.schedulers import FIFOScheduler, TrialScheduler
+from ray.tune.trial import Trial
 from ray.tune.web_server import TuneServer
 
 MAX_DEBUG_TRIALS = 20

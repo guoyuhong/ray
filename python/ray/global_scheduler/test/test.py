@@ -1,8 +1,5 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import numpy as np
 import os
 import random
 import signal
@@ -10,16 +7,18 @@ import sys
 import time
 import unittest
 
+import numpy as np
+import pyarrow as pa
+
 # The ray import must come before the pyarrow import because ray modifies the
 # python path so that the right version of pyarrow is found.
 import ray.global_scheduler as global_scheduler
 import ray.local_scheduler as local_scheduler
 import ray.plasma as plasma
-from ray.plasma.utils import create_object
+import ray.ray_constants as ray_constants
 from ray import services
 from ray.experimental import state
-import ray.ray_constants as ray_constants
-import pyarrow as pa
+from ray.plasma.utils import create_object
 
 USE_VALGRIND = False
 PLASMA_STORE_MEMORY = 1000000000

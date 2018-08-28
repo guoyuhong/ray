@@ -1,14 +1,12 @@
 # Code in this file is copied and adapted from
 # https://github.com/openai/evolution-strategies-starter.
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-from collections import OrderedDict
 import os
 import sys
 import time
+from collections import OrderedDict
 
 import tensorflow as tf
 from tensorflow.core.util import event_pb2

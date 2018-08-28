@@ -43,7 +43,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from __future__ import print_function
 
 import dis
-from functools import partial
 import imp
 import io
 import itertools
@@ -56,7 +55,7 @@ import sys
 import traceback
 import types
 import weakref
-
+from functools import partial
 
 # cloudpickle is meant for inter process communication: we expect all
 # communicating processes to run the same Python version hence we favor

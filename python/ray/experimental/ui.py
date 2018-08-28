@@ -1,13 +1,14 @@
-import ipywidgets as widgets
-import numpy as np
 import os
 import pprint
-import ray
 import shutil
 import tempfile
 import time
 
-from IPython.display import display, IFrame, clear_output
+import ipywidgets as widgets
+import numpy as np
+from IPython.display import IFrame, clear_output, display
+
+import ray
 
 # Instances of this class maintains keep track of whether or not a
 # callback is currently executing. Since the execution of the callback

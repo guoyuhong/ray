@@ -2,12 +2,10 @@
 
 It also checks that it is usable with a separate scheduler.
 """
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import ray
-from ray.tune import run_experiments, register_trainable
+from ray.tune import register_trainable, run_experiments
 from ray.tune.schedulers import AsyncHyperBandScheduler
 from ray.tune.suggest import HyperOptSearch
 

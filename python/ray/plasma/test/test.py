@@ -1,9 +1,5 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
-import numpy as np
-from numpy.testing import assert_equal
 import os
 import random
 import signal
@@ -13,15 +9,21 @@ import threading
 import time
 import unittest
 
+import numpy as np
+import pyarrow as pa
+import pyarrow.plasma as plasma
+from numpy.testing import assert_equal
+
 # The ray import must come before the pyarrow import because ray modifies the
 # python path so that the right version of pyarrow is found.
 import ray
-from ray.plasma.utils import (random_object_id, create_object_with_id,
-                              create_object)
 import ray.ray_constants as ray_constants
 from ray import services
-import pyarrow as pa
-import pyarrow.plasma as plasma
+from ray.plasma.utils import (
+    create_object,
+    create_object_with_id,
+    random_object_id,
+)
 
 USE_VALGRIND = False
 PLASMA_STORE_MEMORY = 1000000000
