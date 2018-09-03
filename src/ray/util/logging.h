@@ -17,6 +17,8 @@ namespace google {
 class LogMessage;
 }  // namespace google
 typedef google::LogMessage LoggingProvider;
+#elif RAY_USE_LOG4CPLUS
+  typedef std::ostringstream LoggingProvider;
 #else
 namespace ray {
 class CerrLog;
@@ -111,9 +113,14 @@ class RayLog : public RayLogBase {
   static void InstallFailureSignalHandler();
 
  private:
-  std::unique_ptr<LoggingProvider> logging_provider_;
-  /// True if log messages should be logged and false if they should be ignored.
+ /// True if log messages should be logged and false if they should be ignored.
   bool is_enabled_;
+  int severity_;
+  int line_number_;
+  const char *file_name_;
+
+  std::unique_ptr<LoggingProvider> logging_provider_;
+
   static int severity_threshold_;
   // In InitGoogleLogging, it simply keeps the pointer.
   // We need to make sure the app name passed to InitGoogleLogging exist.
