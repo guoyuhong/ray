@@ -59,7 +59,7 @@ cdef extern from "ray/raylet/raylet_client.h" nogil:
         CRayStatus Wait(const c_vector[CObjectID] &object_ids, int num_returns,
                        int64_t timeout_milliseconds, c_bool wait_local,
                        const CTaskID &current_task_id, WaitResultPair *result)
-        CRayStatus PushError(const CDriverID &job_id, const c_string &type,
+        CRayStatus PushError(const CDriverID &driver_id, const c_string &type,
                              const c_string &error_message, double timestamp)
         CRayStatus PushProfileEvents(const GCSProfileTableDataT &profile_events)
         CRayStatus FreeObjects(const c_vector[CObjectID] &object_ids,

@@ -11,6 +11,7 @@
 
 using ray::ActorID;
 using ray::ActorCheckpointID;
+using ray::DriverID;
 using ray::JobID;
 using ray::ObjectID;
 using ray::TaskID;
@@ -130,7 +131,7 @@ class RayletClient {
   /// \param The error message.
   /// \param The timestamp of the error.
   /// \return ray::Status.
-  ray::Status PushError(const JobID &job_id, const std::string &type,
+  ray::Status PushError(const DriverID &driver_id, const std::string &type,
                         const std::string &error_message, double timestamp);
 
   /// Store some profile events in the GCS.

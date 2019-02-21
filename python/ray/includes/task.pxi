@@ -62,7 +62,7 @@ cdef class Task:
             task_new_actor_handles.push_back((<ActorHandleID?>new_actor_handle).data)
 
         self.task_spec.reset(new CTaskSpecification(
-            CUniqueID(driver_id.data), parent_task_id.data, parent_counter, actor_creation_id.data,
+            CDriverID(driver_id.data), parent_task_id.data, parent_counter, actor_creation_id.data,
             actor_creation_dummy_object_id.data, max_actor_reconstructions, CUniqueID(actor_id.data),
             CUniqueID(actor_handle_id.data), actor_counter, task_new_actor_handles, task_args, num_returns,
             required_resources, required_placement_resources, LANGUAGE_PYTHON,

@@ -91,7 +91,7 @@ Status Log<ID, Data>::Lookup(const JobID &job_id, const ID &id, const Callback &
       std::vector<DataT> results;
       if (!data.empty()) {
         auto root = flatbuffers::GetRoot<GcsTableEntry>(data.data());
-        RAY_CHECK(from_flatbuf(*root->id()) == id);
+        RAY_CHECK(from_flatbuf<ID>(*root->id()) == id);
         for (size_t i = 0; i < root->entries()->size(); i++) {
           DataT result;
           auto data_root = flatbuffers::GetRoot<Data>(root->entries()->Get(i)->data());
@@ -128,7 +128,7 @@ Status Log<ID, Data>::Subscribe(const JobID &job_id, const ClientID &client_id,
         auto root = flatbuffers::GetRoot<GcsTableEntry>(data.data());
         ID id;
         if (root->id()->size() > 0) {
-          id = from_flatbuf(*root->id());
+          id = from_flatbuf<ID>(*root->id());
         }
         std::vector<DataT> results;
         for (size_t i = 0; i < root->entries()->size(); i++) {
@@ -245,18 +245,18 @@ std::string Table<ID, Data>::DebugString() const {
   return result.str();
 }
 
-Status ErrorTable::PushErrorToDriver(const JobID &job_id, const std::string &type,
+Status ErrorTable::PushErrorToDriver(const DriverID &driver_id, const std::string &type,
                                      const std::string &error_message, double timestamp) {
   auto data = std::make_shared<ErrorTableDataT>();
-  data->job_id = job_id.binary();
+  data->job_id = driver_id.binary();
   data->type = type;
   data->error_message = error_message;
   data->timestamp = timestamp;
-  return Append(job_id, job_id, data, /*done_callback=*/nullptr);
+  return Append(JobID(driver_id), driver_id, data, /*done_callback=*/nullptr);
 }
 
 std::string ErrorTable::DebugString() const {
-  return Log<JobID, ErrorTableData>::DebugString();
+  return Log<DriverID, ErrorTableData>::DebugString();
 }
 
 Status ProfileTable::AddProfileEventBatch(const ProfileTableData &profile_events) {
@@ -273,11 +273,11 @@ std::string ProfileTable::DebugString() const {
   return Log<UniqueID, ProfileTableData>::DebugString();
 }
 
-Status DriverTable::AppendDriverData(const JobID &driver_id, bool is_dead) {
+Status DriverTable::AppendDriverData(const DriverID &driver_id, bool is_dead) {
   auto data = std::make_shared<DriverTableDataT>();
   data->driver_id = driver_id.binary();
   data->is_dead = is_dead;
-  return Append(driver_id, driver_id, data, /*done_callback=*/nullptr);
+  return Append(JobID(driver_id), driver_id, data, /*done_callback=*/nullptr);
 }
 
 void ClientTable::RegisterClientAddedCallback(const ClientTableCallback &callback) {
@@ -437,7 +437,7 @@ const std::unordered_map<ClientID, ClientTableDataT> &ClientTable::GetAllClients
 
 std::string ClientTable::DebugString() const {
   std::stringstream result;
-  result << Log<UniqueID, ClientTableData>::DebugString();
+  result << Log<ClientID, ClientTableData>::DebugString();
   result << ", cache size: " << client_cache_.size()
          << ", num removed: " << removed_clients_.size();
   return result.str();
